@@ -12,6 +12,10 @@ exports.login = Joi.object({
     password: Joi.string().min(2).required()
 })
 
+exports.subCategories = Joi.object({
+    categories_id : Joi.string().required(),
+})
+
 
 
 

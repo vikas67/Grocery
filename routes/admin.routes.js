@@ -1,10 +1,22 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var admin = require("../controllers/admin.controllers")
+const upload = require('../middleware/upload')
+
+const admin = require("../controllers/admin.controllers")
 
 /* Login */
 router.get("/login" , admin.Login)
 router.post("/login" , admin.Post_Login)
+
+/*  Category */
+router.get('/sub-category' , admin.SubCategory)
+router.post('/sub-category', upload.single('icon') , admin.Post_SubCategory)
+
+/* SubCategory */
+
+
+
+
 
 module.exports = router;
