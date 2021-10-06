@@ -1,0 +1,17 @@
+<% let obj = locals.messages; if (Object.keys(obj).length !== 0) { %>
+    <% if(locals.messages.success){ %>
+    <script>
+        !function (i) {
+            "use strict";
+            i.NotificationApp.send("successfully!", "  <%= locals.messages.success %>  ", "bottom-right", "rgba(0,0,0,0.2)", "info")
+        }(window.jQuery);
+    </script>
+    <% }else { %>
+    <script>
+        !function (i) {
+            "use strict";
+            i.NotificationApp.send("Unsuccessfully!", " <%= locals.messages.error %> ", "bottom-right", "rgba(0,0,0,0.2)", "error")
+        }(window.jQuery);
+    </script>
+    <% } %>
+<% } %>

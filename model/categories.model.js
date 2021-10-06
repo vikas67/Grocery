@@ -6,7 +6,7 @@ const CategoriesSchema = new Schema({
     position : {type: Number, require: true},
     icon : {type: String ,  require: true},
     parent_id : {type: Schema.Types.ObjectId , ref : "category" , default : null},
-    status: {type: Boolean, default: true},
+    status: {type: Boolean, default: false},
     created_at: {type: Date, default: new Date()},
 });
 

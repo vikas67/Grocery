@@ -14,11 +14,11 @@ const compression = require('compression');
 
 
 
-var clientRouter = require('./routes/client.routes');
-var adminRouter = require('./routes/admin.routes');
-var apiRouter = require('./routes/api.routes');
+const adminRouter = require('./routes/admin.routes');
+const apiRouter = require('./routes/api.routes');
+const authRouter = require('./routes/auth.routes');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,9 +62,9 @@ app.use((req, res, next) => {
 });
 
 /*  Routers */
-app.use('/', clientRouter);
 app.use('/admin', adminRouter);
 app.use('/app/api/v1', apiRouter);
+app.use('/auth/admin', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

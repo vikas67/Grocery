@@ -9,7 +9,7 @@ const {signAccessToken, signRefreshToken, verifyRefreshToken} = require('../../u
 
 /*  MODEL */
 const User = require('../../model/user.model');
-const Categories = require('../../model/categories.model.model');
+const Categories = require('../../model/categories.model');
 
 exports.Post_Register = async (req, res, next) => {
 
