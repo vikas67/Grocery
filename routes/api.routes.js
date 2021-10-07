@@ -17,11 +17,20 @@ router.post('/register' , api.Post_Register)
 router.post('/login'  , api.Post_Login)
 
 /* Category */
-router.get('/category' , verifyAccessToken , api.Category)
+router.get('/category' ,  api.Category)
 
+/* Category */
+router.post('/register/number' , api.Post_Register_Number)
 
+/* Otp */
+router.post('/verify/otp' , api.Post_VerifyOtp)
+router.post('/resend/otp' , api.Post_ResendOtp)
 
+/* Forgot password */
+router.post('/forgot/password' , api.Post_ForgotPassword)
 
+/* Reset Password */
+router.post('/reset/password' , api.Post_ResetPassword)
 
 
 

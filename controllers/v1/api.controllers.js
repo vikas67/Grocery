@@ -3,6 +3,7 @@ const slugify = require('slugify')
 const Validation = require('../../util/ApiValidationSchema')
 const moment = require('moment');
 const createError = require('http-errors')
+const rn = require('random-number');
 
 /*  JWT  */
 const {signAccessToken, signRefreshToken, verifyRefreshToken} = require('../../util/jwt.helper')
@@ -119,7 +120,7 @@ exports.Category = async (req, res, next) => {
                     {parent_id: null}
                 ]
             }
-        )
+        ).sort({created_at: -1})
 
         res.send({
             error: false,
@@ -146,7 +147,7 @@ exports.SubCategory = async (req, res, next) => {
                     {parent_id: result.categories_id}
                 ]
             }
-        )
+        ).sort({created_at: -1})
 
         res.send({
             error: false,
@@ -159,5 +160,180 @@ exports.SubCategory = async (req, res, next) => {
         next(e)
     }
 }
+exports.Post_Register_Number = async (req, res, next) => {
+    try {
+
+        const result = await Validation.RegisterNumber.validateAsync(req.body);
+
+        if (!validId(result.user_id)) {
+            throw createError.NotFound("Invalid user id")
+        }
+        let _id = mongoose.Types.ObjectId(result.user_id);
+
+        const user = await User.findOne({_id})
+
+        if (!user) {
+            throw createError.NotFound('User not registered')
+        }
+
+        let options = {
+            min: 100000
+            , max: 999999
+            , integer: true
+        }
+
+        let otp = rn(options)
+
+        await User.updateOne({_id}, {number: result.mobile_number, otp});
+
+        res.send({
+            error: false,
+            message: 'Number register',
+            code: 200,
+            otp
+        })
+
+    } catch (e) {
+        if (e.isJoi === true) e.status = 422
+        next(e)
+    }
+}
+exports.Post_VerifyOtp = async (req, res, next) => {
+    try {
+
+        const result = await Validation.RegisterNumber.validateAsync(req.body);
+
+        if (!validId(result.user_id)) {
+            throw createError.NotFound("Invalid user id")
+        }
+        let _id = mongoose.Types.ObjectId(result.user_id);
+
+        const user = await User.findOne({$and: [{_id}, {otp: result.otp}]})
+
+        if (!user) {
+            throw createError.NotFound('User not registered')
+        }
+
+        await User.findOne({$and: [{_id}, {otp: null}]})
+
+        res.send({
+            error: false,
+            message: 'verify otp',
+            code: 200,
+        })
+
+    } catch (e) {
+        if (e.isJoi === true) e.status = 422
+        next(e)
+    }
+}
+exports.Post_ResendOtp = async (req, res, next) => {
+    try {
+
+        const result = await Validation.ResendOtp.validateAsync(req.body);
+
+        if(!validId(result.user_id)) {
+            throw createError.NotFound("Invalid user id")
+        }
+        let _id = mongoose.Types.ObjectId(result.user_id);
+
+        const user = await User.findOne({_id})
+
+        if (!user) {
+            throw createError.NotFound('User not registered')
+        }
+
+        let options = {
+            min: 100000
+            , max: 999999
+            , integer: true
+        }
+
+        let otp = rn(options)
+
+        await User.updateOne({_id}, {number: result.mobile_number, otp});
+
+        res.send({
+            error: false,
+            message: 'Resend otp',
+            code: 200,
+            otp
+        })
+
+    } catch (e) {
+        if (e.isJoi === true) e.status = 422
+        next(e)
+    }
+}
+exports.Post_ForgotPassword = async (req, res, next) => {
+    try{
+
+        const result = await Validation.ForgotPassword.validateAsync(req.body);
+
+        const user = await User.findOne({email : result.email})
+
+        if (!user) {
+            throw createError.NotFound('User not registered')
+        }
+
+        let options = {
+            min: 100000
+            , max: 999999
+            , integer: true
+        }
+
+        let otp = rn(options)
+
+        await User.updateOne({_id}, {otp});
 
 
+        res.send({
+            error: false,
+            message: 'verify user',
+            code: 200,
+            user
+        })
+
+    } catch (e) {
+        if (e.isJoi === true) e.status = 422
+        next(e)
+    }
+}
+exports.Post_ResetPassword = async (req , res , next) => {
+    try{
+
+        const result = await Validation.ResetPassword.validateAsync(req.body);
+
+        if (!validId(result.user_id)) {
+            throw createError.NotFound("Invalid user id")
+        }
+        let _id = mongoose.Types.ObjectId(result.user_id);
+
+
+        const user = await User.findOne({$and: [{_id}, {email: result.email}]})
+
+        if (!user) {
+            throw createError.NotFound('User not registered')
+        }
+
+
+
+        let change_users_pass = await User.findOneAndUpdate({_id}, {password: result.password});
+
+        res.send({
+            error: false,
+            message: 'verify user',
+            code: 200,
+            user : change_users_pass
+        })
+
+    } catch (e) {
+        if (e.isJoi === true) e.status = 422
+        next(e)
+    }
+}
+
+function validId(id) {
+    let checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
+    return checkForHexRegExp.test(id);
+}

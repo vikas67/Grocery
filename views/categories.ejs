@@ -6,9 +6,7 @@
         <div class="page-title-box">
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <!--                    <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>-->
-                    <!--                    <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>-->
-                    <!--                    <li class="breadcrumb-item active">Banner Add</li>-->
+
                 </ol>
             </div>
             <h4 class="page-title">Category</h4>
@@ -89,7 +87,7 @@
                                                        data-switch="success"
                                                        value="<%= (row.status) ? 'off' : 'on' %>"
                                                         <%= (row.status) ? 'checked' : '' %>
-                                                       onchange="Popular(this ,'<%= row._id %>' )">
+                                                       onchange="ChangeStatus(this ,'<%= row._id %>' )">
                                                 <label for="<%= i %>" data-on-label="on"
                                                        data-off-label="off"
                                                        class="mb-0 d-block"></label>
@@ -167,10 +165,13 @@
     function ChangeStatus(thiss, id) {
         $(thiss).val(($(thiss).val() === 'on') ? 'off' : 'on');
         let val = $(thiss).val();
-        console.log(val)
-        $.post('/admin/category/update/status', {val, id}, data => {
-
-        })
+        console.log("sxsa")
+        $.ajax({
+            url: '/admin//categories/status',
+            type: 'PATCH',
+            data : {id , val},
+            success: function (response) {}
+        });
     }
 
     function showModal(_id) {

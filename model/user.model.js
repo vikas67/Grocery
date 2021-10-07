@@ -29,6 +29,19 @@ UserSchema.pre('save', async function (next) {
     }
 });
 
+UserSchema.pre('updateOne', async function (next) {
+    try {
+        if (this.isNew) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(this.password, salt);
+            this.password = hashedPassword;
+        }
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
 UserSchema.methods.isValidPassword = async function (password) {
     try {
         return await bcrypt.compare(password, this.password);
@@ -36,5 +49,7 @@ UserSchema.methods.isValidPassword = async function (password) {
         throw createHttpError.InternalServerError(error.message);
     }
 };
+
+
 
 module.exports = model('users', UserSchema);
