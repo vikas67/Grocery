@@ -27,6 +27,16 @@ router.delete('/sub-categories' , admin.Delete_SubCategory)
 router.get('/product' , admin.Product)
 router.post('/product' , admin.Post_Product)
 
+/* State */
+router.get('/state/list' , admin.State)
+router.post('/state/list' , admin.Post_State)
+router.delete('/state/list' , admin.Delete_State)
+router.patch('/state/list' , admin.Patch_State)
+
+/* City */
+router.get('/city/list' , admin.City)
+
+
 
 
 module.exports = router;

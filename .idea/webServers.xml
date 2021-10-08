@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="6deb4295-b7ed-4ef4-b6bc-6be310a18b7b" name="161.97.180.201">
-        <fileTransfer rootFolder="/node" accessType="SFTP" host="161.97.180.201" port="22" sshConfigId="2e8ade90-6348-4fbf-9168-1961bba8778c" sshConfig="mdi@161.97.180.201:22 password">
+        <fileTransfer rootFolder="/node/the lallua" accessType="SFTP" host="161.97.180.201" port="22" sshConfigId="2e8ade90-6348-4fbf-9168-1961bba8778c" sshConfig="mdi@161.97.180.201:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

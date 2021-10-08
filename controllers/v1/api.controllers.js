@@ -11,6 +11,11 @@ const {signAccessToken, signRefreshToken, verifyRefreshToken} = require('../../u
 /*  MODEL */
 const User = require('../../model/user.model');
 const Categories = require('../../model/categories.model');
+const Notification = require('../../model/notification.model');
+const Product = require('../../model/product.model');
+
+
+
 
 exports.Post_Register = async (req, res, next) => {
 
@@ -136,15 +141,21 @@ exports.Category = async (req, res, next) => {
 exports.SubCategory = async (req, res, next) => {
     try {
 
-        const result = await Validation.subCategories(req.body);
+        const result = await Validation.subCategories.validateAsync(req.body);
 
+        if (!validId(result.categories_id)) {
+            req.flash('error', "Invalid object id!");
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(result.categories_id)
 
         const subCategories = await Categories.find(
             {
                 $and: [
                     {position: 2},
                     {status: true},
-                    {parent_id: result.categories_id}
+                    {parent_id: _id}
                 ]
             }
         ).sort({created_at: -1})
@@ -157,6 +168,7 @@ exports.SubCategory = async (req, res, next) => {
         })
 
     } catch (e) {
+        if (e.isJoi === true) e.status = 422
         next(e)
     }
 }
@@ -284,7 +296,7 @@ exports.Post_ForgotPassword = async (req, res, next) => {
 
         let otp = rn(options)
 
-        await User.updateOne({_id}, {otp});
+        await User.updateOne({_id : user._id}, {otp});
 
 
         res.send({
@@ -332,8 +344,94 @@ exports.Post_ResetPassword = async (req , res , next) => {
         next(e)
     }
 }
+exports.Notification = async (req , res , next) => {
+    try {
+
+        const notification =  await Notification.find().sort({created_at : -1})
+
+        res.send({
+            error: false,
+            message: 'Notification list',
+            code: 200,
+            notification
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_SubCategoriesProduct = async (req , res, next) => {
+    try {
+
+        const result = await Validation.SubCategoriesProduct.validateAsync(req.body);
+
+        if (!validId(result.subCategories_id)) {
+            req.flash('error', "Invalid object id!");
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(result.subCategories_id)
+
+        let SubCategoriesProduct = await Product.find({}).sort({created_at : -1})
+
+        res.send({
+            error: false,
+            message: 'Notification list',
+            code: 200,
+            Products : SubCategoriesProduct
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+
+
+
+
+
 
 function validId(id) {
     let checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
     return checkForHexRegExp.test(id);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

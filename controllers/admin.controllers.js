@@ -10,6 +10,9 @@ const app = {};
 
 /* Models */
 const Categories = require('../model/categories.model')
+const State = require('../model/state.model')
+const City = require('../model/city.model')
+
 
 
 exports.Login = async (req, res, next) => {
@@ -91,7 +94,23 @@ exports.Product = async (req, res, next) => {
         next(e)
     }
 }
-
+exports.State = async (req  ,res , next) => {
+    try {
+        let state = await State.find().sort({created_at : -1})
+        res.render('state', {app: await appData() , state})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.City = async (req  ,res , next) => {
+    try {
+        let state = await State.find();
+        let city = await City.find().sort({created_at : -1});
+        res.render('city', {app: await appData() , city , state})
+    } catch (e) {
+        next(e)
+    }
+}
 
 /*  Post Request */
 exports.Post_Category = async (req, res, next) => {
@@ -174,23 +193,59 @@ exports.Post_SubCategory = async (req, res, next) => {
 }
 exports.Post_Product = async (req, res, next) => {
 
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        errors.array().forEach((error) => {
-            req.flash('error', error.msg);
-        });
-        res.redirect("/admin/banner/create/" + req.params.id)
-        return;
-    }
+    try {
 
-    if (!req.file) {
-        const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
-        res.status(200).send({result: response_result});
-        return;
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            errors.array().forEach((error) => {
+                req.flash('error', error.msg);
+            });
+            res.redirect("/admin/banner/create/" + req.params.id)
+            return;
+        }
+
+        if (!req.file) {
+            const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
+            res.status(200).send({result: response_result});
+            return;
+        }
+
+    }catch (e) {
+        next(e)
     }
 
 
 }
+exports.Post_State = async (req , res , next) => {
+
+    try{
+
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            errors.array().forEach((error) => {
+                req.flash('error', error.msg);
+            });
+            res.redirect("/admin/state/list")
+            return;
+        }
+
+        const {name} = req.body;
+
+        const state = new State({
+            name : name,
+            slug : ConvertSlug(name)
+        })
+
+        await state.save();
+        res.redirect("/admin/state/list")
+
+    }catch (e) {
+        next(e)
+    }
+
+}
+
+
 
 
 /* Delete Method */
@@ -243,6 +298,30 @@ exports.Delete_SubCategory = async (req, res, next) => {
     }
 
 }
+exports.Delete_State = async (req, res, next) => {
+
+    try {
+
+
+        const {id} = req.body;
+
+        if (!validId(id)) {
+            req.flash('error', "Invalid object id!");
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(id)
+       await State.deleteOne({_id});
+        req.flash('success', "Successfully");
+        res.status(200).send({error: false, message: "delete successfully"})
+
+    } catch (e) {
+        console.error(e);
+        req.flash('error', "Something went wrong!");
+        res.status(200).send({error: true, message: e.message})
+    }
+
+}
 
 
 /* Patch Request */
@@ -259,6 +338,28 @@ exports.Patch_CategoryStatus = async (req, res, next) => {
         let _id = mongoose.Types.ObjectId(id)
         let value = (val == "off") ? 'true' : 'false';
         await Categories.updateOne({_id}, {status: value});
+        res.status(200).send({error: false, message: "Update successfully"})
+
+
+    } catch (e) {
+        console.error(e);
+        res.status(200).send({error: true, message: e.message})
+    }
+
+}
+exports.Patch_State = async (req, res, next) => {
+
+    try {
+
+        const {id, val} = req.body;
+
+        if (!validId(id)) {
+            req.flash('error', "Invalid object id!");
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+        let _id = mongoose.Types.ObjectId(id)
+        let value = (val == "off") ? 'true' : 'false';
+        await State.updateOne({_id}, {status: value});
         res.status(200).send({error: false, message: "Update successfully"})
 
 

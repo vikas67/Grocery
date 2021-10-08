@@ -9,7 +9,7 @@
 
                 </ol>
             </div>
-            <h4 class="page-title">Category</h4>
+            <h4 class="page-title">State</h4>
         </div>
     </div>
 </div>
@@ -24,16 +24,24 @@
                         <div class="row">
                             <div class="col-lg-6">
 
-                                <form action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+                                <form action="" method="POST" autocomplete="off">
+
+                                    <div class="mb-3">
+                                        <label for="example-select" class="form-label">Select State</label>
+                                        <select class="form-select" id="state" name="state" required>
+
+                                            <option value="null" selected="" disabled="">Select State</option>
+                                            <% state.forEach(row =>{ %>
+                                            <option value="<%=row._id%>"><%=row.name%></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+
                                     <div class="mb-3">
                                         <label for="simpleinput" class="form-label">Name</label>
                                         <input type="text" id="name" name="name" class="form-control">
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="example-fileinput" class="form-label">Icon</label>
-                                        <input type="file" id="example-fileinput" class="form-control" name="icon">
-                                    </div>
 
 
                                     <div class="mb-6">
@@ -57,7 +65,7 @@
         <div class="card">
             <div class="card-body">
 
-                <h4 class="header-title">Categories List</h4>
+                <h4 class="header-title">State List</h4>
 
                 <div class="tab-content">
                     <div class="tab-pane show active" id="basic-example-preview">
@@ -66,18 +74,19 @@
                                 <thead>
                                 <tr>
                                     <th>SL#</th>
-                                    <th>Name</th>
+                                    <th>State name</th>
+                                    <th>City name</th>
                                     <th>SLUG</th>
-                                    <th>Icon</th>
                                     <th>STATUS</th>
 
                                     <th>ACTION</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <% let i = 1; categories.forEach(row => { %>
+                                <% let i = 1; city.forEach(row => { %>
                                     <tr>
                                         <td><%= i; %></td>
+                                        <td><%= row.name %></td>
                                         <td><%= row.name %></td>
                                         <td><%= row.slug %></td>
                                         <td>
@@ -92,12 +101,6 @@
                                                        data-off-label="off"
                                                        class="mb-0 d-block"></label>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <img src="/uploads/<%= row.icon %>"
-                                                 class="img-fluid img-thumbnail p-2" style="max-width: 75px;"
-                                                 alt="<%= row.name %>">
-
                                         </td>
 
                                         <td class="table-action">
@@ -151,11 +154,11 @@
         $('.deleteCategory').click(() => {
             let id = $('.set_id').val();
             $.ajax({
-                url: '/admin/categories',
+                url: '/admin/city/list',
                 type: 'DELETE',
                 data : {id},
                 success: function (response) {
-                    window.location = "/admin/categories"
+                    window.location = "/admin/state/list"
                 }
             });
         })
@@ -167,7 +170,7 @@
         let val = $(thiss).val();
         console.log("sxsa")
         $.ajax({
-            url: '/admin/categories/status',
+            url: '/admin/city/list',
             type: 'PATCH',
             data : {id , val},
             success: function (response) {}
