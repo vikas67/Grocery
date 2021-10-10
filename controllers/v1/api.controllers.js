@@ -13,6 +13,7 @@ const User = require('../../model/user.model');
 const Categories = require('../../model/categories.model');
 const Notification = require('../../model/notification.model');
 const Product = require('../../model/product.model');
+const Address = require('../../model/address.model');
 
 
 
@@ -360,7 +361,32 @@ exports.Notification = async (req , res , next) => {
         next(e)
     }
 }
-exports.Post_SubCategoriesProduct = async (req , res, next) => {
+exports.Post_CategoriesProduct = async (req, res, next) => {
+    try {
+
+        const result = await Validation.CategoriesProduct.validateAsync(req.body);
+
+        if (!validId(result.categories_id)) {
+            req.flash('error', "Invalid object id!");
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(result.categories_id)
+
+        let CategoriesProduct = await Product.find({$and: [{status: true}, {"categories.cat_id": _id}, {"categories.position": 1}]}, {purchase_price: 0}).sort({created_at: -1})
+
+        res.send({
+            error: false,
+            message: 'Category Product list',
+            code: 200,
+            Products: CategoriesProduct
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_SubCategoriesProduct = async (req, res, next) => {
     try {
 
         const result = await Validation.SubCategoriesProduct.validateAsync(req.body);
@@ -372,13 +398,31 @@ exports.Post_SubCategoriesProduct = async (req , res, next) => {
 
         let _id = mongoose.Types.ObjectId(result.subCategories_id)
 
-        let SubCategoriesProduct = await Product.find({}).sort({created_at : -1})
+        let SubCategoriesProduct = await Product.find({$and: [{status: true}, {"categories.cat_id": _id}, {"categories.position": 2}]}, {purchase_price: 0}).sort({created_at: -1})
 
         res.send({
             error: false,
-            message: 'Notification list',
+            message: 'Sub Category Product list',
             code: 200,
-            Products : SubCategoriesProduct
+            Products: SubCategoriesProduct
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_SimilarProduct = async (req, res, next) => {
+    try {
+
+        const result = await Validation.SimilarProduct.validateAsync(req.body);
+
+        const similar_product = await Product.find({$and: [{keyword: result.keyword}, {status: true}]}, {purchase_price: 0})
+
+        res.send({
+            error: false,
+            message: 'Similar product list',
+            code: 200,
+            similar_product
         })
 
     } catch (e) {
@@ -386,9 +430,76 @@ exports.Post_SubCategoriesProduct = async (req , res, next) => {
     }
 }
 
+exports.Post_SearchProduct = async (req, res, next) => {
+    try {
+
+        const result = await Validation.SearchProduct.validateAsync(req.body);
+
+        const product = await Product.find({$and: [{name: result.product_name}, {status: true}]}, {purchase_price: 0})
+
+        res.send({
+            error: false,
+            message: 'Search Product list',
+            code: 200,
+            product
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_AddAddress = async (req, res, next) => {
+    try {
+
+        const result = await Validation.AddAddress.validateAsync(req.body);
+
+        let state = {}
+        state.state_id = result.state_id
+        state.state_name = result.state_name
+
+        let city = {}
+        city.city_id = result.city_id
+        city.city_name = result.city_name
+
+
+        const address = await new Address({
+            user_id : result.user_id,
+            name : result.name,
+            number : result.number,
+            state : state,
+            city : city,
+            address : result.address,
+        })
+
+        await address.save()
+
+        res.send({
+            error: false,
+            message: 'Search Product list',
+            code: 200,
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_Address = async (req, res, next) => {
+    try {
+
+        const result = await Validation.Address.validateAsync(req.body);
 
 
 
+        res.send({
+            error: false,
+            message: 'Search Product list',
+            code: 200,
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
 
 
 function validId(id) {

@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const passport = require('passport');
 
 /* Auth */
@@ -9,7 +9,7 @@ router.post(
     passport.authenticate('local', {
         // successRedirect: '/admin/dashboard',
         successReturnToOrRedirect: '/admin/dashboard',
-        failureRedirect: '/admin/login',
+        failureRedirect: '/auth/admin/login',
         failureFlash: true,
     })
 );

@@ -5,22 +5,29 @@ const moment = require('moment');
 const path = require("path");
 const fs = require('fs');
 let img_path = path.resolve() + "/public/uploads/";
-const app = {};
 
 
 /* Models */
 const Categories = require('../model/categories.model')
 const State = require('../model/state.model')
 const City = require('../model/city.model')
-
+const Product = require('../model/product.model')
+const Keyword = require('../model/keyword.model')
 
 
 exports.Login = async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
-            res.redirect('/auth/admin/dashboard')
+            res.redirect('/admin/dashboard')
             return
         }
+        // await new Admin({
+        //     name : "vikas",
+        //     email : "vikas12@gmail.com",
+        //     password : "123",
+        //     number : "9131341719",
+        // }).save();
+
         res.render("login")
     } catch (e) {
         next(e);
@@ -89,28 +96,111 @@ exports.SubCategory = async (req, res, next) => {
 }
 exports.Product = async (req, res, next) => {
     try {
-        res.render('product', {app: await appData()})
+        const category = await Categories.find({$and: [{position: 1}]}).sort({created_at: -1});
+        const keyword = await Keyword.find().sort({created_at: -1});
+        res.render('product', {app: await appData(), category, keyword})
     } catch (e) {
         next(e)
     }
 }
-exports.State = async (req  ,res , next) => {
+exports.State = async (req, res, next) => {
     try {
-        let state = await State.find().sort({created_at : -1})
-        res.render('state', {app: await appData() , state})
+        let state = await State.find().sort({created_at: -1})
+        res.render('state', {app: await appData(), state})
     } catch (e) {
         next(e)
     }
 }
-exports.City = async (req  ,res , next) => {
+exports.City = async (req, res, next) => {
     try {
         let state = await State.find();
-        let city = await City.find().sort({created_at : -1});
-        res.render('city', {app: await appData() , city , state})
+        let city = await City.find().sort({created_at: -1});
+        res.render('city', {app: await appData(), city, state})
     } catch (e) {
         next(e)
     }
 }
+exports.ListProduct = async (req, res, next) => {
+    try {
+        let state = await State.find();
+        let city = await City.find().sort({created_at: -1});
+        res.render('product-list', {app: await appData(), city, state})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderAll = async (req, res, next) => {
+    try {
+        res.render('order-all', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderPending = async (req, res, next) => {
+    try {
+        res.render('order-pending', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderConfirmed = async (req, res, next) => {
+    try {
+        res.render('order-confirmed', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderProcessing = async (req, res, next) => {
+    try {
+        res.render('order-processing', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderOut_of_delivery = async (req, res, next) => {
+    try {
+        res.render('order-out_of_delivery', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderDelivery = async (req, res, next) => {
+    try {
+        res.render('order-delivery', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderReturned = async (req, res, next) => {
+    try {
+        res.render('order-returned', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderFailed = async (req, res, next) => {
+    try {
+        res.render('order-failed', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.OrderCanceled = async (req, res, next) => {
+    try {
+        res.render('order-canceled', {app: await appData()})
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Keyword = async (req, res, next) => {
+    try {
+        const keyword = await Keyword.find();
+        res.render('keyword', {app: await appData(), keyword})
+    } catch (e) {
+        next(e)
+    }
+}
+
 
 /*  Post Request */
 exports.Post_Category = async (req, res, next) => {
@@ -195,20 +285,83 @@ exports.Post_Product = async (req, res, next) => {
 
     try {
 
+
         let errors = validationResult(req);
         if (!errors.isEmpty()) {
             errors.array().forEach((error) => {
                 req.flash('error', error.msg);
             });
-            res.redirect("/admin/banner/create/" + req.params.id)
+            res.redirect("/admin/product")
             return;
         }
 
-        if (!req.file) {
+        if (req.files.product_thumb === undefined) {
             const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
-            res.status(200).send({result: response_result});
+            req.flash('error', "Thumbnail file can't empty.");
+            res.redirect("/admin/product")
             return;
         }
+
+        const {
+            product_name,
+            category,
+            sub_category,
+            unit_price,
+            purchase_price,
+            discount,
+            discountType,
+            total_qty,
+            unit,
+            desciption,
+            keyword
+        } = req.body;
+
+
+        let categorys = [];
+        let images = [];
+
+        /*  Start Category  */
+
+        let cat = {};
+        cat.cat_id = mongoose.Types.ObjectId(category);
+        cat.position = 1;
+        categorys.push(cat);
+
+        if (sub_category !== undefined) {
+            let cate = {};
+            cate.cat_id = mongoose.Types.ObjectId(sub_category);
+            cate.position = 2;
+            categorys.push(cate);
+        }
+
+        /* Images */
+        if (req.files.product_img !== undefined) {
+            for (let i = 0; i < req.files.product_img.length; i++) {
+                images.push(req.files.product_img[i].filename)
+            }
+        }
+
+
+        let product = await Product({
+            added_by: 'ADMIN',
+            name: product_name,
+            slug: ConvertSlug(product_name),
+            thumbnail: '',
+            image: images,
+            categories: categorys,
+            unit_price: unit_price,
+            purchase_price: purchase_price,
+            discount: discount,
+            discount_type: discountType,
+            current_stock: total_qty,
+            unit: unit,
+            keyword: keyword,
+            details: desciption
+        });
+
+        await product.save();
+        req.flash('success', "Product successfully insert");
+        res.redirect("/admin/product")
 
     }catch (e) {
         next(e)
@@ -237,14 +390,42 @@ exports.Post_State = async (req , res , next) => {
         })
 
         await state.save();
+        req.flash('success', "State successfully insert");
         res.redirect("/admin/state/list")
 
-    }catch (e) {
+    } catch (e) {
         next(e)
     }
 
 }
+exports.Post_Keyword = async (req, res, next) => {
+    try {
 
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            errors.array().forEach((error) => {
+                req.flash('error', error.msg);
+            });
+            res.redirect("/admin/keyword")
+            return;
+        }
+
+        const {keyword_name} = req.body;
+
+        const keyword = new Keyword({
+            name : keyword_name,
+            slug : ConvertSlug(keyword_name)
+        })
+
+        await keyword.save()
+
+        req.flash('success', "Keyword successfully insert");
+        res.redirect("/admin/keyword")
+
+    } catch (e) {
+        next(e)
+    }
+}
 
 
 
@@ -377,8 +558,32 @@ exports.Put_Category = async (req, res, next) => {
 }
 
 
-function appData() {
+/* Ajax Request */
+exports.Ajax_SubCategories = async (req, res, next) => {
 
+    try {
+
+        const {id} = req.body;
+        if (!validId(id)) {
+            res.send({response: false, data: []})
+        }
+
+        let _id = mongoose.Types.ObjectId(id);
+        const SubCategory = await Categories.find({$and: [{position: 2}, {parent_id: _id}]}).sort({created_at: -1});
+
+        res.send({response: true, data: SubCategory})
+
+    } catch (e) {
+        next(e)
+    }
+
+}
+
+
+function appData() {
+    const app = {};
+    app.app_name = "Grocery"
+    return app;
 }
 
 

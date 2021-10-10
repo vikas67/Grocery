@@ -51,7 +51,7 @@ app.use(
 /* For Passport JS Authentication */
 app.use(passport.initialize());
 app.use(passport.session());
-// require('./util/passport.auth');
+require('./util/passport.auth');
 
 
 /* Connect Flash */
@@ -62,9 +62,18 @@ app.use((req, res, next) => {
 });
 
 /*  Routers */
-app.use('/admin', adminRouter);
+app.use('/admin' , ensureAuthenticated , adminRouter);
 app.use('/app/api/v1', apiRouter);
 app.use('/auth/admin', authRouter);
+
+/* Authenticated Check */
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect('/auth/admin/login');
+    }
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

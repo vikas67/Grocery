@@ -45,8 +45,33 @@ exports.ResetPassword = Joi.object({
 exports.SubCategoriesProduct = Joi.object({
     subCategories_id : Joi.string().required()
 })
+exports.CategoriesProduct = Joi.object({
+    categories_id : Joi.string().required()
+})
+
+exports.SimilarProduct = Joi.object({
+    keyword : Joi.string().required()
+})
+
+exports.SearchProduct = Joi.object({
+    product_name : Joi.string().required()
+})
+
+exports.AddAddress = Joi.object({
+    user_id : Joi.string().required(),
+    name : Joi.string().required(),
+    number : Joi.number().required(),
+    state_id : Joi.string().required(),
+    state_name : Joi.string().required(),
+    city_id : Joi.string().required(),
+    city_name : Joi.string().required(),
+    address : Joi.string().required(),
+})
 
 
+exports.Address = Joi.object({
+    user_id : Joi.string().required()
+})
 
 
 

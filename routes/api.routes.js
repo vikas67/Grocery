@@ -40,6 +40,19 @@ router.get('/notification'  , api.Notification)
 /* Product by Sub categories */
 router.post('/subcategories/product'  , api.Post_SubCategoriesProduct)
 
+/* Product by categories */
+router.post('/categories/product'  , api.Post_CategoriesProduct)
+
+/* Similar Product */
+router.post('/similar/product'  , api.Post_SimilarProduct)
+
+/* Search Product */
+router.post('/search/product'  , api.Post_SearchProduct)
+
+/* Address */
+router.post('/add/address'  , api.Post_AddAddress)
+router.post('/address'  , api.Post_Address)
+
 
 
 
