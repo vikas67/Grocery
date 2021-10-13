@@ -5,9 +5,11 @@ const createHttpError = require('http-errors');
 
 const AdminSchema = new Schema({
     name : {type: String, require: true},
+    role : {type: Schema.Types.ObjectId , ref : "role management", require: true},
     number : {type: Number, default: 0},
     email : {type: String, require: true, lowercase: true},
     password : {type: String, require: true},
+    avatar : {type: String, require: true , default : null},
     status: {type: Boolean, default: true},
     created_at: {type: Date, default: new Date()},
 });

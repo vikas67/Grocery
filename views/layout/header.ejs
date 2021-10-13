@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><%=app.app_name%></title>
+    <title><%= app.app_name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
     <meta content="Coderthemes" name="author"/>
@@ -52,7 +52,9 @@
 
         <div class="h-100" id="leftside-menu-container" data-simplebar>
 
-            <!--- Sidemenu -->
+            <!--
+
+            &lt;!&ndash;- Sidemenu &ndash;&gt;
             <ul class="side-nav">
 
                 <li class="side-nav-title side-nav-item">Navigation</li>
@@ -82,8 +84,146 @@
                     </div>
                 </li>
 
+                <% app.Role.forEach((role) => { %>
 
-                <!-- Order -->
+
+                    <% if(role === 'ORDER'){ %>
+                        &lt;!&ndash; Order &ndash;&gt;
+                        <li class="side-nav-title side-nav-item">ORDER MANAGEMENT</li>
+                        <li class="side-nav-item">
+
+                            <a data-bs-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order"
+                               class="side-nav-link">
+
+                                <i class="uil-store"></i>
+                                <span> Order </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="order">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="/admin/order/all">All</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/pending">Pending</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/confirmed">Confirmed</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/processing">Processing</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/out_of_delivery">Out For Delivery</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/deliverd">Delivered</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/returned">Returned</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/failed">Failed</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/order/canceled">Canceled</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <% } %>
+
+
+                    <% if(role === 'CATEGORY'){ %>
+                        <li class="side-nav-title side-nav-item">PRODUCT MANAGEMENT</li>
+                        <li class="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#category" aria-expanded="false"
+                               aria-controls="category"
+                               class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Category </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="category">
+                                <ul class="side-nav-second-level">
+                                    <li>
+                                        <a href="/admin/categories">Category</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/sub-categories">Sub Category</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li>
+                    <% } %>
+
+                    <% if(role === 'PRODUCTS'){ %>
+                        <li class="side-nav-item">
+
+                            <a data-bs-toggle="collapse" href="#product" aria-expanded="false"
+                               aria-controls="product"
+                               class="side-nav-link">
+                                <i class="uil-store"></i>
+                                <span> Products </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="product">
+                                <ul class="side-nav-second-level">
+
+                                    <li>
+                                        <a href="/admin/keyword">Create Keyword</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/admin/product">Create Product</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/admin/list/product">Product List</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li>
+                    <% } %>
+
+                <% }) %>
+            </ul>
+-->
+
+
+            <ul class="side-nav">
+
+
+                <li class="side-nav-title side-nav-item">Navigation</li>
+
+                <li class="side-nav-item">
+                    <a data-bs-toggle="collapse" href="#sidebarDashboards" aria-expanded="false"
+                       aria-controls="sidebarDashboards" class="side-nav-link">
+                        <i class="uil-home-alt"></i>
+                        <span class="badge bg-success float-end">4</span>
+                        <span> Dashboards </span>
+                    </a>
+                    <div class="collapse" id="sidebarDashboards">
+                        <ul class="side-nav-second-level">
+                            <li>
+                                <a href="dashboard-analytics.html">Analytics</a>
+                            </li>
+                            <li>
+                                <a href="dashboard-crm.html">CRM</a>
+                            </li>
+                            <li>
+                                <a href="index.html">Ecommerce</a>
+                            </li>
+                            <li>
+                                <a href="dashboard-projects.html">Projects</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                &lt;!&ndash; Order &ndash;&gt;
                 <li class="side-nav-title side-nav-item">ORDER MANAGEMENT</li>
 
                 <li class="side-nav-item">
@@ -130,7 +270,6 @@
 
                 <li class="side-nav-title side-nav-item">PRODUCT MANAGEMENT</li>
 
-
                 <li class="side-nav-item">
                     <a data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="category"
                        class="side-nav-link">
@@ -150,7 +289,6 @@
                         </ul>
                     </div>
                 </li>
-
 
                 <li class="side-nav-item">
 
@@ -178,7 +316,6 @@
                         </ul>
                     </div>
                 </li>
-
 
                 <li class="side-nav-title side-nav-item">COUNTRY HANDLER</li>
 
@@ -251,7 +388,6 @@
 
                 <li class="side-nav-title side-nav-item">DEAL MANAGEMENT</li>
 
-
                 <li class="side-nav-item">
                     <a data-bs-toggle="collapse" href="#deal" aria-expanded="false" aria-controls="deal"
                        class="side-nav-link">
@@ -278,9 +414,16 @@
                 <li class="side-nav-title side-nav-item">BUSINESS MANAGEMENT</li>
 
                 <li class="side-nav-item">
-                    <a href="/admin/banner/list" class="side-nav-link">
+                    <a href="/admin/customer/list" class="side-nav-link">
                         <i class="uil-calender"></i>
                         <span> Customer List </span>
+                    </a>
+                </li>
+
+                <li class="side-nav-item">
+                    <a href="/admin/version" class="side-nav-link">
+                        <i class="uil-calender"></i>
+                        <span> Version Control </span>
                     </a>
                 </li>
 
@@ -306,7 +449,7 @@
                 </li>
 
                 <li class="side-nav-item">
-                    <a href="/admin/banner/list" class="side-nav-link">
+                    <a href="/admin/send/notification" class="side-nav-link">
                         <i class="uil-calender"></i>
                         <span> Send Notification </span>
                     </a>
@@ -320,7 +463,8 @@
                 </li>
 
                 <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#business_settings" aria-expanded="false" aria-controls="deal"
+                    <a data-bs-toggle="collapse" href="#business_settings" aria-expanded="false"
+                       aria-controls="deal"
                        class="side-nav-link">
                         <i class="uil-store"></i>
                         <span> Business Settings </span>
@@ -338,6 +482,7 @@
                 <li class="side-nav-title side-nav-item">REPORT & ANALYTICS</li>
 
             </ul>
+
 
             <!-- Help Box -->
             <div class="help-box text-white text-center">

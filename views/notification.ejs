@@ -1,0 +1,61 @@
+<%-include("./layout/header")%>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+
+                </ol>
+            </div>
+            <h4 class="page-title">Notification</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="tab-content">
+
+                    <div class="tab-pane show active" id="input-types-preview">
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                <form action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+
+
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Title</label>
+                                        <input type="text" id="title" name="title" class="form-control">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Message</label>
+                                        <input type="text" id="message" name="message" class="form-control">
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Image</label>
+                                        <input type="file" id="img" name="img" class="form-control">
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <button type="submit" class="btn btn-primary">Send Notification</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%-include("./layout/footer")%>

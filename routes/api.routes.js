@@ -53,9 +53,18 @@ router.post('/search/product'  , api.Post_SearchProduct)
 router.post('/add/address'  , api.Post_AddAddress)
 router.post('/address'  , api.Post_Address)
 
+/* Profile */
+router.post('/profile'  , api.Post_Profile)
 
+/* Review */
+router.post('/add/review'  , api.Post_AddReview)
+router.post('/review'  , api.Post_Review)
 
+/* Change Password */
+router.post('/change/password'  , api.Post_ChangePassword)
 
+/* Version control */
+router.get('/version/control'  , api.VersionControl)
 
 
 

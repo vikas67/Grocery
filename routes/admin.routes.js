@@ -44,6 +44,7 @@ router.patch('/state/list', admin.Patch_State)
 
 /* City */
 router.get('/city/list', admin.City)
+router.post('/city/list', admin.Post_City)
 
 /* Order  */
 router.get('/order/all' , admin.OrderAll)
@@ -60,6 +61,30 @@ router.get('/order/canceled' , admin.OrderCanceled)
 router.get('/keyword' , admin.Keyword)
 router.post('/keyword' , admin.Post_Keyword)
 
+/* Version */
+router.get('/version' , admin.Version)
+router.post('/version' , admin.Post_Version)
+
+/* Customer List */
+router.get('/customer/list' , admin.CustomerList)
+router.patch('/customer/status' , admin.Patch_CustomerList)
+
+/* Send Notification */
+router.get('/send/notification' , admin.SendNotification)
+router.post('/send/notification', upload.single("img") , admin.Post_SendNotification)
+
+/* Role Managemnt */
+router.get('/role-management' , admin.RoleManagement )
+router.post('/role-management' , admin.Post_RoleManagement )
+
+/* Employee */
+router.get('/employee/add' , admin.AddEmployee)
+router.post('/employee/add', upload.single('img') , admin.Post_AddEmployee)
+
+/* Flash Deal */
+router.get("/flash-deal" , admin.FlashDeal)
+router.get("/flash-sale/product/:id" , admin.FlashDealProduct)
+router.post("/flash-deal" , admin.Post_FlashDeal)
 
 /* Ajax */
 router.post('/ajax/subcategory/fetch', admin.Ajax_SubCategories)

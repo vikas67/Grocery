@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     number : {type: Number, default: 0},
     email : {type: String, require: true, lowercase: true},
     password : {type: String, require: true},
+    avatar : {type: String, require: true , default : null},
     otp : {type: Number, default: 0},
     auth : {type: Boolean , default : false},
     token : {type: String , default: null},

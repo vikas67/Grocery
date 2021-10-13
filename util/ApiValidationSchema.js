@@ -73,6 +73,27 @@ exports.Address = Joi.object({
     user_id : Joi.string().required()
 })
 
+exports.Profile = Joi.object({
+    user_id : Joi.string().required()
+})
+
+exports.AddReview = Joi.object({
+    user_id : Joi.string().required(),
+    product_id : Joi.string().required(),
+    review : Joi.number().required(),
+    comment : Joi.string().required(),
+})
+
+exports.Review = Joi.object({
+    product_id : Joi.string().required(),
+})
+
+exports.ChangePassword = Joi.object({
+    user_id : Joi.string().required(),
+    old_password : Joi.string().required(),
+    new_password : Joi.string().required(),
+})
+
 
 
 

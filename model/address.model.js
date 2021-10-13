@@ -4,6 +4,7 @@ const AddressSchema = new Schema({
     user_id: {type: Schema.Types.ObjectId, ref: "user_id", require: true},
     name: {type: String, require: true},
     number: {type: Number, require: true},
+    alternate_number : {type: Number, require: true , default : null},
     state: {
         state_id: {type: Schema.Types.ObjectId, ref: "State id", require: true},
         state_name: {type: String, require: true}

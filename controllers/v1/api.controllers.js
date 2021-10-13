@@ -4,6 +4,7 @@ const Validation = require('../../util/ApiValidationSchema')
 const moment = require('moment');
 const createError = require('http-errors')
 const rn = require('random-number');
+const bcrypt = require('bcrypt');
 
 /*  JWT  */
 const {signAccessToken, signRefreshToken, verifyRefreshToken} = require('../../util/jwt.helper')
@@ -14,8 +15,8 @@ const Categories = require('../../model/categories.model');
 const Notification = require('../../model/notification.model');
 const Product = require('../../model/product.model');
 const Address = require('../../model/address.model');
-
-
+const Review = require('../../model/review.model');
+const VersionControl = require('../../model/version.model');
 
 
 exports.Post_Register = async (req, res, next) => {
@@ -145,7 +146,6 @@ exports.SubCategory = async (req, res, next) => {
         const result = await Validation.subCategories.validateAsync(req.body);
 
         if (!validId(result.categories_id)) {
-            req.flash('error', "Invalid object id!");
             res.status(200).send({error: true, message: "Invalid object id"})
         }
 
@@ -245,7 +245,7 @@ exports.Post_ResendOtp = async (req, res, next) => {
 
         const result = await Validation.ResendOtp.validateAsync(req.body);
 
-        if(!validId(result.user_id)) {
+        if (!validId(result.user_id)) {
             throw createError.NotFound("Invalid user id")
         }
         let _id = mongoose.Types.ObjectId(result.user_id);
@@ -279,11 +279,11 @@ exports.Post_ResendOtp = async (req, res, next) => {
     }
 }
 exports.Post_ForgotPassword = async (req, res, next) => {
-    try{
+    try {
 
         const result = await Validation.ForgotPassword.validateAsync(req.body);
 
-        const user = await User.findOne({email : result.email})
+        const user = await User.findOne({email: result.email})
 
         if (!user) {
             throw createError.NotFound('User not registered')
@@ -297,7 +297,7 @@ exports.Post_ForgotPassword = async (req, res, next) => {
 
         let otp = rn(options)
 
-        await User.updateOne({_id : user._id}, {otp});
+        await User.updateOne({_id: user._id}, {otp});
 
 
         res.send({
@@ -312,8 +312,8 @@ exports.Post_ForgotPassword = async (req, res, next) => {
         next(e)
     }
 }
-exports.Post_ResetPassword = async (req , res , next) => {
-    try{
+exports.Post_ResetPassword = async (req, res, next) => {
+    try {
 
         const result = await Validation.ResetPassword.validateAsync(req.body);
 
@@ -329,15 +329,16 @@ exports.Post_ResetPassword = async (req , res , next) => {
             throw createError.NotFound('User not registered')
         }
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(result.password, salt);
 
-
-        let change_users_pass = await User.findOneAndUpdate({_id}, {password: result.password});
+        let change_users_pass = await User.findOneAndUpdate({_id}, {password: hashedPassword});
 
         res.send({
             error: false,
             message: 'verify user',
             code: 200,
-            user : change_users_pass
+            user: change_users_pass
         })
 
     } catch (e) {
@@ -345,10 +346,10 @@ exports.Post_ResetPassword = async (req , res , next) => {
         next(e)
     }
 }
-exports.Notification = async (req , res , next) => {
+exports.Notification = async (req, res, next) => {
     try {
 
-        const notification =  await Notification.find().sort({created_at : -1})
+        const notification = await Notification.find().sort({created_at: -1})
 
         res.send({
             error: false,
@@ -367,7 +368,6 @@ exports.Post_CategoriesProduct = async (req, res, next) => {
         const result = await Validation.CategoriesProduct.validateAsync(req.body);
 
         if (!validId(result.categories_id)) {
-            req.flash('error', "Invalid object id!");
             res.status(200).send({error: true, message: "Invalid object id"})
         }
 
@@ -392,7 +392,6 @@ exports.Post_SubCategoriesProduct = async (req, res, next) => {
         const result = await Validation.SubCategoriesProduct.validateAsync(req.body);
 
         if (!validId(result.subCategories_id)) {
-            req.flash('error', "Invalid object id!");
             res.status(200).send({error: true, message: "Invalid object id"})
         }
 
@@ -429,7 +428,6 @@ exports.Post_SimilarProduct = async (req, res, next) => {
         next(e)
     }
 }
-
 exports.Post_SearchProduct = async (req, res, next) => {
     try {
 
@@ -463,12 +461,12 @@ exports.Post_AddAddress = async (req, res, next) => {
 
 
         const address = await new Address({
-            user_id : result.user_id,
-            name : result.name,
-            number : result.number,
-            state : state,
-            city : city,
-            address : result.address,
+            user_id: result.user_id,
+            name: result.name,
+            number: result.number,
+            state: state,
+            city: city,
+            address: result.address,
         })
 
         await address.save()
@@ -488,12 +486,156 @@ exports.Post_Address = async (req, res, next) => {
 
         const result = await Validation.Address.validateAsync(req.body);
 
+        if (!validId(result.user_id)) {
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(result.user_id)
+
+        const address = await Address.find({user_id: _id})
+
+        res.send({
+            error: false,
+            message: 'User address list',
+            code: 200,
+            address
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_Profile = async (req, res, next) => {
+    try {
+
+        const result = await Validation.Profile.validateAsync(req.body);
+
+        if (!validId(result.user_id)) {
+            res.status(200).send({error: true, message: "Invalid object id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(result.user_id)
+
+        const user = await User.find({_id})
+
+        res.send({
+            error: false,
+            message: 'User address list',
+            code: 200,
+            user
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_AddReview = async (req, res, next) => {
+    try {
+
+        const result = await Validation.Review.validateAsync(req.body);
+
+        if (!validId(result.user_id)) {
+            res.status(200).send({error: true, message: "Invalid user id"})
+        }
+
+        if (!validId(result.product_id)) {
+            res.status(200).send({error: true, message: "Invalid product id"})
+        }
+
+        let user_id = mongoose.Types.ObjectId(result.user_id)
+        let product_id = mongoose.Types.ObjectId(result.product_id)
+
+        const review = await Review({
+            user_id: user_id,
+            product_id: product_id,
+            review: result.review,
+            comment: result.comment,
+        })
+
+        await review.save()
+
+        res.send({
+            error: false,
+            message: 'successfully create',
+            code: 200,
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_Review = async (req, res, next) => {
+    try {
+
+        const result = await Validation.Review.validateAsync(req.body);
+
+        if (!validId(result.product_id)) {
+            res.status(200).send({error: true, message: "Invalid product id"})
+        }
+
+        let product_id = mongoose.Types.ObjectId(result.product_id)
+
+        const review = await Review.find({product_id: product_id})
+
+        await review.save()
+
+        res.send({
+            error: false,
+            message: 'successfully create',
+            code: 200,
+            review
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Post_ChangePassword = async (req, res, next) => {
+    try {
+
+        const result = await Validation.ChangePassword.validateAsync(req.body);
+
+        if (!validId(result.user_id)) {
+            res.status(200).send({error: true, message: "Invalid product id"})
+        }
+
+        let _id = mongoose.Types.ObjectId(result.user_id)
+
+        const user = await User.findOne({_id})
+
+        let doesMatchPsw = await bcrypt.compare(result.old_password, user.password);
+
+        if (!doesMatchPsw) {
+            throw createError(403, 'old password not match')
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(result.new_password, salt);
+
+        let change_users_pass = await User.findOneAndUpdate({_id}, {password: hashedPassword});
 
 
         res.send({
             error: false,
-            message: 'Search Product list',
+            message: 'successfully password change',
             code: 200,
+            user: change_users_pass
+        })
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.VersionControl = async (req, res, next) => {
+    try {
+
+        const version = await VersionControl.find();
+
+        res.send({
+            error: false,
+            message: 'Version control',
+            code: 200,
+            version
         })
 
     } catch (e) {
