@@ -2,6 +2,7 @@ const {Schema, model} = require("mongoose");
 
 const StockSchema = new Schema({
     product_id : {type: Schema.Types.ObjectId , ref : "Product" , require: true},
+    total_stock : {type: Number, require: true},
     current_stock : {type: Number, require: true},
     remaining_stock : {type: Number, require: true},
     sell_out : {type: Number, require: true},

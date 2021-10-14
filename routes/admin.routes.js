@@ -86,8 +86,18 @@ router.get("/flash-deal" , admin.FlashDeal)
 router.get("/flash-sale/product/:id" , admin.FlashDealProduct)
 router.post("/flash-deal" , admin.Post_FlashDeal)
 
+/* Selller */
+router.get('/add/seller' , admin.AddSeller)
+router.post('/add/seller' , admin.Post_AddSeller)
+
+/* Product Details */
+router.get('/product/details/:id' , admin.ProductDetails)
+
+
+
 /* Ajax */
 router.post('/ajax/subcategory/fetch', admin.Ajax_SubCategories)
+router.patch('/ajax/add/product/stock', admin.Ajax_ProductAddStock)
 
 
 module.exports = router;

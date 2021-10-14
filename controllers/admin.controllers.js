@@ -21,6 +21,7 @@ const User = require('../model/user.model')
 const RoleManagement = require('../model/role_management')
 const Admin = require('../model/admin.model')
 const FlashDeal = require('../model/flash_deals.model')
+const Stock = require('../model/stock.model')
 
 
 exports.Login = async (req, res, next) => {
@@ -126,9 +127,32 @@ exports.City = async (req, res, next) => {
 }
 exports.ListProduct = async (req, res, next) => {
     try {
-        let state = await State.find();
-        let city = await City.find().sort({created_at: -1});
-        res.render('product-list', {app: await appData(req, res, next), city, state})
+
+        const product = await Product.aggregate([
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "categories.cat_id",
+                    foreignField: "_id",
+                    as: "category_name",
+                }
+            },
+            {$unwind: "$category_name"},
+            {
+                $project: {
+                    "category_name": {name: 1},
+                    name: 1,
+                    created_at: 1,
+                    thumbnail: 1,
+                    unit_price: 1,
+                    current_stock: 1,
+                    status: 1,
+                    created_at: 1,
+                    _id: 1,
+                }
+            }
+        ]);
+        res.render('product-list', {app: await appData(req, res, next), product, moment})
     } catch (e) {
         next(e)
     }
@@ -284,6 +308,45 @@ exports.FlashDealProduct = async (req, res, next) => {
         next(e)
     }
 }
+exports.AddSeller = async (req, res, next) => {
+    try {
+
+        res.render('add-seller', {app: await appData(req, res, next)})
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.ProductDetails = async (req, res, next) => {
+    try {
+
+        let id = req.params.id;
+        if (!validId(id)) {
+            req.flash('error', 'Invalid product id');
+            res.redirect("/admin/list/product")
+        }
+
+        let _id = mongoose.Types.ObjectId(id);
+
+        const productInfo = await Product.aggregate([
+            {$match: {_id}},
+            {
+                $lookup: {
+                    from: "stocks",
+                    localField: "_id",
+                    foreignField: "product_id",
+                    as: "stocks",
+                }
+            },
+            {$unwind: "$stocks"},
+        ])
+
+        res.render('product-details', {app: await appData(req, res, next), productInfo, moment})
+
+    } catch (e) {
+        next(e)
+    }
+}
 
 
 /*  Post Request */
@@ -425,12 +488,11 @@ exports.Post_Product = async (req, res, next) => {
             }
         }
 
-
         let product = await Product({
             added_by: 'ADMIN',
             name: product_name,
             slug: ConvertSlug(product_name),
-            thumbnail: '',
+            thumbnail: req.files.product_thumb[0].filename,
             image: images,
             categories: categorys,
             unit_price: unit_price,
@@ -443,7 +505,19 @@ exports.Post_Product = async (req, res, next) => {
             details: desciption
         });
 
-        await product.save();
+        let prod = await product.save();
+
+        let stock = await new Stock({
+            product_id: prod.id,
+            total_stock: total_qty,
+            current_stock: total_qty,
+            remaining_stock: total_qty,
+            sell_out: 0,
+            sell_out_amt: 0,
+        })
+
+        await stock.save()
+
         req.flash('success', "Product successfully insert");
         res.redirect("/admin/product")
 
@@ -715,6 +789,47 @@ exports.Post_FlashDeal = async (req, res, next) => {
 
 
 }
+exports.Post_AddSeller = async (req, res, next) => {
+
+    try {
+
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            errors.array().forEach((error) => {
+                req.flash('error', error.msg);
+            });
+            res.redirect("/admin/flash-deal")
+            return;
+        }
+
+        if (!req.file) {
+            const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
+            req.flash('error', response_result.message);
+            res.redirect("/admin/employee/add")
+            return
+        }
+
+        const {
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            password,
+            repeat_password,
+            shop_name,
+            shop_address,
+        } = req.body;
+
+
+        req.flash('success', 'Successfully');
+        res.redirect("/admin/flash-deal")
+
+    } catch (e) {
+        next(e)
+    }
+
+
+}
 
 
 /* Delete Method */
@@ -881,6 +996,39 @@ exports.Ajax_SubCategories = async (req, res, next) => {
         const SubCategory = await Categories.find({$and: [{position: 2}, {parent_id: _id}]}).sort({created_at: -1});
 
         res.send({response: true, data: SubCategory})
+
+    } catch (e) {
+        next(e)
+    }
+
+}
+exports.Ajax_ProductAddStock = async (req, res, next) => {
+
+    try {
+
+        const {p_id, s_id, qty} = req.body;
+
+        if (!validId(p_id)) {
+            res.send({response: false, message: "invalid product id", data: []})
+        }
+
+        if (!validId(s_id)) {
+            res.send({response: false, message: "invalid Stock id", data: []})
+        }
+
+        let p_ids = mongoose.Types.ObjectId(p_id);
+        let s_ids = mongoose.Types.ObjectId(s_id);
+
+        let product = await Product.findOne({_id: p_ids}, {current_stock: 1});
+        let addQty = product.current_stock + parseInt(qty);
+        await Product.updateOne({_id: p_ids}, {current_stock: addQty});
+
+        let stocks = await Stock.findOne({_id: s_ids});
+        let totalStock = stocks.total_stock + parseInt(qty);
+        let currentStock = stocks.current_stock + parseInt(qty);
+        await Stock.updateOne({_id: s_ids}, {current_stock: currentStock, total_stock: totalStock});
+
+        res.send({response: true, data: []})
 
     } catch (e) {
         next(e)

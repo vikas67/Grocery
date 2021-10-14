@@ -1,0 +1,136 @@
+<%- include("./layout/header") %>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+
+                </ol>
+            </div>
+            <h4 class="page-title">Create Seller</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="tab-content">
+
+            <div class="tab-pane show active" id="input-types-preview">
+
+
+                <form action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">First Name</label>
+                                        <input type="text" id="first_name" name="first_name" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Last Name</label>
+                                        <input type="text" id="last_name" name="last_name" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Email Address</label>
+                                        <input type="text" id="email" name="email" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Phone Number</label>
+                                        <input type="text" id="phone_number" name="phone_number" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Password</label>
+                                        <input type="text" id="password" name="password" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Repeat Password</label>
+                                        <input type="text" id="repeat_password" name="repeat_password"
+                                               class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="example-fileinput" class="form-label">Image</label>
+                                        <input type="file" id="example-fileinput" class="form-control" name="image">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <h4 class="page-title">Seller Info</h4>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Shop Name</label>
+                                    <input type="text" id="shop_name" name="shop_name" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Shop address</label>
+                                    <input type="text" id="shop_address" name="shop_address" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="example-fileinput" class="form-label">Shop Logo</label>
+                                    <input type="file" id="example-fileinput" class="form-control" name="shop_logo">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+<%- include("./layout/footer") %>
