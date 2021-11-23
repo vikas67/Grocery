@@ -1,5 +1,4 @@
-<%- include("./layout/header") %>
-
+<%- include('./layout/header', {dataTable:false}) %>
 
 <div class="row">
     <div class="col-12">
@@ -32,7 +31,7 @@
 
                                             <option value="null" selected="" disabled="">Select State</option>
                                             <% state.forEach(row =>{ %>
-                                            <option value="<%=row._id%>"><%=row.name%></option>
+                                            <option value="<%= row._id %>"><%= row.name %></option>
                                             <% }) %>
                                         </select>
                                     </div>
@@ -41,7 +40,6 @@
                                         <label for="simpleinput" class="form-label">Name</label>
                                         <input type="text" id="name" name="name" class="form-control">
                                     </div>
-
 
 
                                     <div class="mb-6">
@@ -104,7 +102,7 @@
                                         </td>
 
                                         <td class="table-action">
-                                            <a href="/admin/category/edit/<%=row._id%>?pos=0" class="action-icon"> <i
+                                            <a href="/admin/category/edit/<%= row._id %>?pos=0" class="action-icon"> <i
                                                         class="mdi mdi-pencil"></i></a>
                                             <a href="javascript: void(0);" class="action-icon" data-bs-toggle="modal"
                                                data-bs-target="#standard-modal" onclick="showModal('<%= row._id %>')">
@@ -146,41 +144,4 @@
 
 </div>
 
-<script>
-
-
-    $(document).ready(() => {
-
-        $('.deleteCategory').click(() => {
-            let id = $('.set_id').val();
-            $.ajax({
-                url: '/admin/city/list',
-                type: 'DELETE',
-                data : {id},
-                success: function (response) {
-                    window.location = "/admin/state/list"
-                }
-            });
-        })
-
-    })
-
-    function ChangeStatus(thiss, id) {
-        $(thiss).val(($(thiss).val() === 'on') ? 'off' : 'on');
-        let val = $(thiss).val();
-        console.log("sxsa")
-        $.ajax({
-            url: '/admin/city/list',
-            type: 'PATCH',
-            data : {id , val},
-            success: function (response) {}
-        });
-    }
-
-    function showModal(_id) {
-        $(".set_id").val(_id);
-    }
-
-</script>
-
-<%- include("./layout/footer") %>
+<%- include('./layout/footer', {dataTable:false}) %>

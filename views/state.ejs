@@ -1,5 +1,4 @@
-<%- include("./layout/header") %>
-
+<%- include('./layout/header', {dataTable:false}) %>
 
 <div class="row">
     <div class="col-12">
@@ -29,7 +28,6 @@
                                         <label for="simpleinput" class="form-label">Name</label>
                                         <input type="text" id="name" name="name" class="form-control">
                                     </div>
-
 
 
                                     <div class="mb-6">
@@ -90,7 +88,7 @@
                                         </td>
 
                                         <td class="table-action">
-                                            <a href="/admin/category/edit/<%=row._id%>?pos=0" class="action-icon"> <i
+                                            <a href="/admin/category/edit/<%= row._id %>?pos=0" class="action-icon"> <i
                                                         class="mdi mdi-pencil"></i></a>
                                             <a href="javascript: void(0);" class="action-icon" data-bs-toggle="modal"
                                                data-bs-target="#standard-modal" onclick="showModal('<%= row._id %>')">
@@ -142,7 +140,7 @@
             $.ajax({
                 url: '/admin/state/list',
                 type: 'DELETE',
-                data : {id},
+                data: {id},
                 success: function (response) {
                     window.location = "/admin/state/list"
                 }
@@ -158,8 +156,9 @@
         $.ajax({
             url: '/admin/state/list',
             type: 'PATCH',
-            data : {id , val},
-            success: function (response) {}
+            data: {id, val},
+            success: function (response) {
+            }
         });
     }
 
@@ -169,4 +168,4 @@
 
 </script>
 
-<%- include("./layout/footer") %>
+<%- include('./layout/footer', {dataTable:false}) %>

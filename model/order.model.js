@@ -1,8 +1,9 @@
 const {Schema, model} = require("mongoose");
 
 const OrderSchema = new Schema({
+    seller_id: {type: Schema.Types.ObjectId, ref: 'seller', require: true},
     order_id: {type: String, require: true},
-    order_type: {type: String, ref: "COD , Online", require: true},
+    payment_method: {type: String, ref: "COD , Online", require: true},
     user_id: {type: Schema.Types.ObjectId, ref: "User", require: true},
     user_email: {type: String, require: true},
     user_number: {type: Number, require: true},
@@ -15,18 +16,31 @@ const OrderSchema = new Schema({
         coupon_discount: {type: Number, ref: "percent"},
         coupon_amount: {type: Number, ref: "discount off"}
     },
-    product_id: {type: Schema.Types.ObjectId, ref: "Product", require: true},
-    product_name: {type: String, require: true},
-    product_qty: {type: Number, require: true},
-    product_amt: {type: Number, require: true},
-    product_unit: {type: String, require: true, ref: "kg , gram"},
+    product: {type: Array},
     sub_total_amt: {type: Number, require: true},
     total_amt: {type: Number, require: true},
     shipping_amt: {type: Number, require: true},
-    shipping_status: {type: String, require: true, default: "PENDING"},
-    sku: {type: String, require: true},
+    payment_status: {
+        type: String,
+        require: true,
+        enum: ['PAID', 'AWAITING AUTHORIZATION', 'PAYMENT FAILED', 'UNPAID'],
+        uppercase: true
+    },
+    shipping_status: {
+        type: String,
+        require: true,
+        default: "PROCESSING",
+        enum: ['SHIPPED', 'PROCESSING', 'DELIVERED', 'CANCELLED'],
+        uppercase: true
+    },
+    order_process_status: {
+        type: String,
+        require: true,
+        default: "PENDING",
+        enum: ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'RETURNED', 'FAILED', 'CANCELLED'],
+        uppercase: true
+    },
     status: {type: Boolean, require: true, default: true},
-    created_at: {type: Date, default: new Date()},
-});
+}, {timestamps: true});
 
 module.exports = model('order', OrderSchema);

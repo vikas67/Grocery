@@ -7,15 +7,11 @@ router.get('/login', require('../controllers/admin.controllers').Login);
 router.post(
     '/login',
     passport.authenticate('local', {
-        // successRedirect: '/admin/dashboard',
         successReturnToOrRedirect: '/admin/dashboard',
-        failureRedirect: '/auth/admin/login',
+        failureRedirect: '/admin/auth/login',
         failureFlash: true,
     })
 );
-
-
-
 
 
 module.exports = router;

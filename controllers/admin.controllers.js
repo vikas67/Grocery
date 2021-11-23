@@ -22,8 +22,11 @@ const RoleManagement = require('../model/role_management')
 const Admin = require('../model/admin.model')
 const FlashDeal = require('../model/flash_deals.model')
 const Stock = require('../model/stock.model')
+const Seller = require('../model/seller.model')
+const Order = require('../model/order.model')
 
 
+/* Admin Login */
 exports.Login = async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
@@ -38,8 +41,40 @@ exports.Login = async (req, res, next) => {
 
 
 /*  Get Request */
+exports.LogOut = async (req, res, next) => {
+    let user = req.user.roles;
+    req.logout()
+    if (user === 'ADMIN') {
+        res.redirect('/admin/auth/login')
+    } else {
+        res.redirect('/seller/auth/login')
+    }
+
+}
 exports.Dashboard = async (req, res, next) => {
     try {
+
+        // let se = await RoleManagement.findOne({_id: req.user.role}, {module_access: 1}).sort({"order": 1})
+        // console.log("se", se.module_access)
+
+        const Role = await RoleManagement.aggregate([
+            {
+                $match: {
+                    $and: [
+                        {_id: req.user.role},
+                    ]
+                }
+            },
+            {$unwind: '$module_access'},
+            {
+                $sort: {
+                    'module_access.order': 1
+                }
+            },
+            {
+                $project: {module_access: 1, _id: 0}
+            }
+        ])
 
 
         res.render('dashboard', {app: await appData(req, res, next)})
@@ -129,6 +164,7 @@ exports.ListProduct = async (req, res, next) => {
     try {
 
         const product = await Product.aggregate([
+            {$match: {$and: [{user_id: req.user._id}]}},
             {
                 $lookup: {
                     from: "categories",
@@ -147,7 +183,7 @@ exports.ListProduct = async (req, res, next) => {
                     unit_price: 1,
                     current_stock: 1,
                     status: 1,
-                    created_at: 1,
+                    createdAt: 1,
                     _id: 1,
                 }
             }
@@ -159,7 +195,8 @@ exports.ListProduct = async (req, res, next) => {
 }
 exports.OrderAll = async (req, res, next) => {
     try {
-        res.render('order-all', {app: await appData(req, res, next)})
+        const order = await Order.find({seller_id: req.user._id}).sort({createdAt: -1})
+        res.render('order-all', {app: await appData(req, res, next), order, moment})
     } catch (e) {
         next(e)
     }
@@ -220,6 +257,15 @@ exports.OrderCanceled = async (req, res, next) => {
         next(e)
     }
 }
+exports.OrderInfo = async (req, res, next) => {
+    try {
+        let ids = mongoose.Types.ObjectId(req.params.id);
+        const order = await Order.findOne({_id: ids})
+        res.render('order-info', {app: await appData(req, res, next), order})
+    } catch (e) {
+        next(e)
+    }
+}
 exports.Keyword = async (req, res, next) => {
     try {
         const keyword = await Keyword.find();
@@ -253,6 +299,7 @@ exports.SendNotification = async (req, res, next) => {
 }
 exports.RoleManagement = async (req, res, next) => {
     try {
+
         const role_management = await RoleManagement.find();
         res.render('role-management', {app: await appData(req, res, next), role_management})
     } catch (e) {
@@ -311,7 +358,9 @@ exports.FlashDealProduct = async (req, res, next) => {
 exports.AddSeller = async (req, res, next) => {
     try {
 
-        res.render('add-seller', {app: await appData(req, res, next)})
+        const role = await RoleManagement.find();
+        console.log(role)
+        res.render('add-seller', {app: await appData(req, res, next), role})
 
     } catch (e) {
         next(e)
@@ -347,6 +396,43 @@ exports.ProductDetails = async (req, res, next) => {
         next(e)
     }
 }
+exports.SellerList = async (req, res, next) => {
+    try {
+
+
+        const seller = await Admin.aggregate([
+            {
+                $match: {$and: [{roles: 'SELLER'}]}
+            },
+            {
+                $lookup: {
+                    from: "sellers",
+                    localField: "_id",
+                    foreignField: "seller_id",
+                    as: "seller"
+                }
+            },
+            {$unwind: '$seller'},
+            {$project: {seller: {shop_name: 1}, avatar: 1, name: 1, createdAt: 1}}
+        ])
+
+
+        res.render('seller-list', {app: await appData(req, res, next), seller, moment})
+
+    } catch (e) {
+        next(e)
+    }
+}
+exports.Edit_RoleManagement = async (req, res, next) => {
+    try {
+
+        const rolemanagement = await RoleManagement.find({_id: req.params.id});
+        res.render('edit-role-management', {app: await appData(req, res, next), rolemanagement, moment})
+
+    } catch (e) {
+        next(e)
+    }
+}
 
 
 /*  Post Request */
@@ -359,14 +445,14 @@ exports.Post_Category = async (req, res, next) => {
             errors.array().forEach((error) => {
                 req.flash('error', error.msg);
             });
-            res.redirect("/admin/categories")
+            (req.user.roles === 'ADMIN') ? res.redirect("/admin/categories") : res.redirect("/seller/categories")
             return;
         }
 
         if (!req.file) {
             const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
             req.flash('error', response_result.message);
-            res.redirect("/admin/categories")
+            (req.user.roles === 'ADMIN') ? res.redirect("/admin/categories") : res.redirect("/seller/categories")
             return
         }
 
@@ -376,13 +462,13 @@ exports.Post_Category = async (req, res, next) => {
             name,
             slug: await ConvertSlug(name),
             position: 1,
-            icon: req.file.filename,
+            icon: req.file.filename
         });
 
         await categories.save()
 
         req.flash('success', "Successfully");
-        res.redirect("/admin/categories")
+        (req.user.roles === 'ADMIN') ? res.redirect("/admin/categories") : res.redirect("/seller/categories")
 
     } catch (e) {
         next(e)
@@ -398,7 +484,7 @@ exports.Post_SubCategory = async (req, res, next) => {
             errors.array().forEach((error) => {
                 req.flash('error', error.msg);
             });
-            res.redirect("/admin/sub-categories")
+            (req.user.roles === 'ADMIN') ? res.redirect("/admin/sub-categories") : res.redirect("/seller/sub-categories")
             return;
         }
 
@@ -406,7 +492,7 @@ exports.Post_SubCategory = async (req, res, next) => {
 
         if (!validId(category)) {
             req.flash('error', "Invalid object id!");
-            res.redirect("/admin/sub-categories")
+            (req.user.roles === 'ADMIN') ? res.redirect("/admin/sub-categories") : res.redirect("/seller/sub-categories")
         }
 
         let _id = mongoose.Types.ObjectId(category)
@@ -421,7 +507,7 @@ exports.Post_SubCategory = async (req, res, next) => {
         await sub_categories.save()
 
         req.flash('success', "Successfully");
-        res.redirect("/admin/sub-categories")
+        (req.user.roles === 'ADMIN') ? res.redirect("/admin/sub-categories") : res.redirect("/admin/sub-categories")
 
     } catch (e) {
         next(e)
@@ -432,20 +518,19 @@ exports.Post_Product = async (req, res, next) => {
 
     try {
 
-
         let errors = validationResult(req);
         if (!errors.isEmpty()) {
             errors.array().forEach((error) => {
                 req.flash('error', error.msg);
             });
-            res.redirect("/admin/product")
+            (req.user.roles === 'ADMIN') ? res.redirect("/admin/product") : res.redirect("/seller/product")
             return;
         }
 
         if (req.files.product_thumb === undefined) {
             const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
             req.flash('error', "Thumbnail file can't empty.");
-            res.redirect("/admin/product")
+            (req.user.roles === 'ADMIN') ? res.redirect("/admin/product") : res.redirect("/seller/product")
             return;
         }
 
@@ -489,7 +574,8 @@ exports.Post_Product = async (req, res, next) => {
         }
 
         let product = await Product({
-            added_by: 'ADMIN',
+            added_by: req.user.roles,
+            user_id: req.user._id,
             name: product_name,
             slug: ConvertSlug(product_name),
             thumbnail: req.files.product_thumb[0].filename,
@@ -519,7 +605,7 @@ exports.Post_Product = async (req, res, next) => {
         await stock.save()
 
         req.flash('success', "Product successfully insert");
-        res.redirect("/admin/product")
+        (req.user.roles === 'ADMIN') ? res.redirect("/admin/product") : res.redirect("/seller/product")
 
     } catch (e) {
         next(e)
@@ -707,7 +793,17 @@ exports.Post_RoleManagement = async (req, res, next) => {
 
         const {role_name, management} = req.body;
 
-        let AdminRoles = await RoleManagement({role_name: role_name, module_access: management});
+        let arr = []
+
+        management.forEach(item => {
+            let obj = {};
+            let Item = item.toString().split('*#*')
+            obj.value = Item[0];
+            obj.order = parseInt(Item[1]);
+            arr.push(obj)
+        })
+
+        let AdminRoles = await RoleManagement({role_name: role_name, module_access: arr});
         await AdminRoles.save();
         req.flash('success', 'Successfully');
         res.redirect("/admin/role-management")
@@ -798,14 +894,21 @@ exports.Post_AddSeller = async (req, res, next) => {
             errors.array().forEach((error) => {
                 req.flash('error', error.msg);
             });
-            res.redirect("/admin/flash-deal")
+            res.redirect("/admin/add/seller")
             return;
         }
 
-        if (!req.file) {
+        if (req.files.image === undefined) {
             const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
-            req.flash('error', response_result.message);
-            res.redirect("/admin/employee/add")
+            req.flash('error', "Image can't empty.");
+            res.redirect("/admin/add/seller")
+            return
+        }
+
+        if (req.files.shop_logo === undefined) {
+            const response_result = {data: req.file, error: true, error_code: 500, message: "file can't empty."};
+            req.flash('error', "Shop icon can't empty.");
+            res.redirect("/admin/add/seller")
             return
         }
 
@@ -818,11 +921,38 @@ exports.Post_AddSeller = async (req, res, next) => {
             repeat_password,
             shop_name,
             shop_address,
+            role,
         } = req.body;
 
+        if (password !== repeat_password) {
+            req.flash('error', "Repeat password not match");
+            res.redirect("/admin/add/seller")
+            return
+        }
+        let role_id = mongoose.Types.ObjectId(role);
+
+        const user = await new Admin({
+            name: first_name + ' ' + last_name,
+            role: role_id,
+            number: phone_number,
+            email: email,
+            password: password,
+            avatar: req.files.image[0].filename,
+            roles: 'SELLER'
+        });
+
+        let userdata = await user.save()
+        const seller = await new Seller({
+            seller_id: userdata._id,
+            shop_name: shop_name,
+            shop_address: shop_address,
+            shop_logo: req.files.shop_logo[0].filename,
+        });
+
+        await seller.save()
 
         req.flash('success', 'Successfully');
-        res.redirect("/admin/flash-deal")
+        res.redirect("/admin/seller/list")
 
     } catch (e) {
         next(e)
@@ -1026,6 +1156,7 @@ exports.Ajax_ProductAddStock = async (req, res, next) => {
         let stocks = await Stock.findOne({_id: s_ids});
         let totalStock = stocks.total_stock + parseInt(qty);
         let currentStock = stocks.current_stock + parseInt(qty);
+
         await Stock.updateOne({_id: s_ids}, {current_stock: currentStock, total_stock: totalStock});
 
         res.send({response: true, data: []})
@@ -1039,13 +1170,50 @@ exports.Ajax_ProductAddStock = async (req, res, next) => {
 
 async function appData(req, res, next) {
     const app = {};
+    const Role = await RoleManagement.aggregate([
+        {
+            $match: {
+                $and: [
+                    {_id: req.user.role},
+                ]
+            }
+        },
+        {$unwind: '$module_access'},
+        {
+            $sort: {
+                'module_access.order': 1
+            }
+        },
+        {
+            $project: {module_access: 1, _id: 0}
+        }
+    ])
+    let roleAss = {
+        ORDER: 1,
+        BANNER: 2,
+        BRAND: 3,
+        CATEGORIES: 4,
+        PRODUCT: 5,
+        STATE: 6,
+        CITY: 7,
+        ROLE_MANAGEMENT: 8,
+        EMPLOYEE: 9,
+        SELLER: 10,
+        DEAL: 11,
+        CUSTOMER: 12,
+        VERSION: 13,
+        PRODUCT_REVIEW: 14,
+        CUSTOMER_MESSAGE: 15,
+        CUSTOMER_MESSAGE: 16,
+        SEND_NOTIFICATION: 17,
+        COUPAN: 18,
+        BUSINESS_SETTING: 19,
+    };
+    // console.log(Role)
     app.app_name = "Grocery"
-
-    const role = await RoleManagement.findOne({$and: [{_id: req.user.role}, {status: true}]})
-    if (!role) {
-        req.logout();
-    }
-    app.Role = role.module_access;
+    app.Role = Role
+    app.roleAss = roleAss
+    app.user = req.user
     return app;
 }
 

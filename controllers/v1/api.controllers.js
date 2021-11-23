@@ -17,6 +17,8 @@ const Product = require('../../model/product.model');
 const Address = require('../../model/address.model');
 const Review = require('../../model/review.model');
 const VersionControl = require('../../model/version.model');
+const Order = require('../../model/order.model');
+const Stock = require('../../model/stock.model');
 
 
 exports.Post_Register = async (req, res, next) => {
@@ -641,6 +643,109 @@ exports.VersionControl = async (req, res, next) => {
     } catch (e) {
         next(e)
     }
+}
+exports.Post_OrderPlace = async (req, res, next) => {
+
+    try {
+
+        const result = await Validation.Order.validateAsync(req.body);
+
+        const {
+            payment_method,
+            user_id,
+            user_email,
+            user_number,
+            address_id,
+            user_address,
+            coupon,
+            product,
+            sub_total_amt,
+            total_amt,
+            shipping_amt,
+            payment_status
+        } = result;
+
+
+        /* User Address */
+        let UserAddress = {};
+        UserAddress.address_id = address_id
+        UserAddress.user_address = user_address
+
+        let SellerIdsArray = []
+        for (const sId of product) {
+            let sellerIds = SellerIdsArray.find(element => element === sId.seller_id.toString().trim())
+            if (sellerIds === undefined) {
+                SellerIdsArray.push(sId.seller_id.toString().trim())
+            }
+        }
+
+        let Orders = []
+        for (const sellerIdsArrayElement of SellerIdsArray) {
+            if (!validId(sellerIdsArrayElement)) {
+                return next(createError.BadRequest("Seller id invalid"));
+            }
+            let Products = []
+            for (const pro of product) {
+
+                if (pro.seller_id.toString().trim() === sellerIdsArrayElement.toString().trim()) {
+
+                    if (!validId(pro.product_id)) {
+                        return next(createError.BadRequest("Product id invalid"));
+                    }
+
+                    let productIds = mongoose.Types.ObjectId(pro.product_id);
+
+                    /* Product */
+                    let product = await Product.findOne({product_id: productIds}, {current_stock: 1, user_id: 1});
+                    let currentStock = parseInt(product.current_stock) - parseInt(pro.product_qty);
+                    await Product.updateOne({_id: productIds}, {current_stock: currentStock});
+
+                    /* Stock */
+                    let stock = await Stock.findOne({product_id: productIds});
+                    let currentStocks = parseInt(stock.current_stock) - parseInt(pro.product_qty);
+                    let remainingStocks = 0;
+                    let sellOut = stock.sell_out + parseInt(pro.product_qty);
+                    let sellOutAmt = parseInt(stock.sell_out_amt) + parseInt(pro.product_amt);
+                    await Stock.updateOne({product_id: productIds}, {
+                        current_stock: currentStocks,
+                        remaining_stock: remainingStocks,
+                        sell_out: sellOut,
+                        sell_out_amt: sellOutAmt
+                    })
+                    Products.push(pro)
+                }
+            }
+            let order = new Order({
+                seller_id: sellerIdsArrayElement,
+                order_id: "ORDER123456",
+                payment_method: payment_method,
+                user_id: user_id,
+                user_email: user_email,
+                user_number: user_number,
+                user_address: UserAddress,
+                product: Products,
+                coupon: coupon,
+                sub_total_amt: sub_total_amt,
+                total_amt: total_amt,
+                shipping_amt: shipping_amt,
+                payment_status: payment_status
+            });
+            Orders.push(order)
+            await order.save()
+        }
+
+        res.send({
+            error: false,
+            message: 'order place successfully',
+            code: 200,
+            order: Orders
+        })
+
+
+    } catch (e) {
+        next(e)
+    }
+
 }
 
 

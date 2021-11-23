@@ -1,4 +1,4 @@
-<%- include("./layout/header") %>
+<%- include('./layout/header', {dataTable:false}) %>
 
 <div class="row">
     <div class="col-12">
@@ -46,7 +46,7 @@
                                                                           class="text-muted"><i
                                             class="mdi mdi-square-edit-outline ms-2"></i></a></h3>
                             <p class="mb-1">
-                                <% let date = moment(productInfo[0].created_at).format('DD/MM/YYYY') %>
+                                <% let date = moment(productInfo[0].createdAt).format('DD/MM/YYYY') %>
                                 Added Date: <%= date %>
                             </p>
                             <p class="font-16">
@@ -92,7 +92,30 @@
 
                             <!-- Quantity -->
                             <div class="mt-4">
-                                <h6 class="font-14">Quantity</h6>
+                                <h6 class="font-14">
+                                    <% switch (productInfo[0].unit) {
+                                    case "GRAM" :
+                                    %>
+                                    Gram
+                                    <%
+                                        break
+                                    case "KG" :
+                                    %>
+                                    kilograms
+                                    <%
+                                        break
+                                    case "PC" :
+                                    %>
+                                    Pices
+                                    <%
+                                        break
+                                    case "LTR" :
+                                    %>
+                                    Liter
+                                    <%
+                                        break
+                                    } %>
+                                </h6>
                                 <div class="d-flex">
                                     <input type="number" min="1" value="1" class="form-control qty" placeholder="Qty"
                                            style="width: 90px;">
@@ -123,7 +146,7 @@
                                     <div class="col-md-4">
                                         <h6 class="font-14">Remaining Stock:</h6>
                                         <p class="text-sm lh-150">
-                                            <% let remain =   productInfo[0].stocks.current_stock - productInfo[0].stocks.sell_out %>
+                                            <% let remain = productInfo[0].stocks.current_stock - productInfo[0].stocks.sell_out %>
                                             <%= remain %>
                                         </p>
                                     </div>
@@ -165,34 +188,4 @@
     })
 </script>
 
-<%- include("./layout/footer") %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<%- include('./layout/footer', {dataTable:false}) %>

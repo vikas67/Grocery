@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="utf-8"/>
     <title><%= app.app_name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
-    <meta content="Coderthemes" name="author"/>
-    <!-- App favicon -->
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+
     <link rel="shortcut icon" href="/images/favicon.ico">
 
-    <!-- third party css -->
-    <link href="/css/vendor/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css"/>
-    <!-- third party css end -->
+    <% if(dataTable){ %>
+        <link href="/css/vendor/dataTables.bootstrap5.css" rel="stylesheet" type="text/css"/>
+        <link href="/css/vendor/responsive.bootstrap5.css" rel="stylesheet" type="text/css"/>
+    <% } %>
 
     <!-- App css -->
     <link href="/css/icons.min.css" rel="stylesheet" type="text/css"/>
     <link href="/css/app.min.css" rel="stylesheet" type="text/css" id="light-style"/>
     <link href="/css/app-dark.min.css" rel="stylesheet" type="text/css" id="dark-style"/>
-    <script src="/js/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+
 </head>
 
 <body class="loading"
       data-layout-config='{"leftSideBarTheme":"dark","layoutBoxed":false, "leftSidebarCondensed":false, "leftSidebarScrollable":false,"darkMode":false, "showRightSidebarOnStart": true}'>
 
 <div class="wrapper">
+
     <div class="leftside-menu">
 
-
+        <!-- LOGO -->
         <a href="index.html" class="logo text-center logo-light">
                     <span class="logo-lg">
                         <img src="/images/logo.png" alt="" height="16">
@@ -52,146 +56,7 @@
 
         <div class="h-100" id="leftside-menu-container" data-simplebar>
 
-            <!--
-
-            &lt;!&ndash;- Sidemenu &ndash;&gt;
-            <ul class="side-nav">
-
-                <li class="side-nav-title side-nav-item">Navigation</li>
-
-                <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#sidebarDashboards" aria-expanded="false"
-                       aria-controls="sidebarDashboards" class="side-nav-link">
-                        <i class="uil-home-alt"></i>
-                        <span class="badge bg-success float-end">4</span>
-                        <span> Dashboards </span>
-                    </a>
-                    <div class="collapse" id="sidebarDashboards">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="dashboard-analytics.html">Analytics</a>
-                            </li>
-                            <li>
-                                <a href="dashboard-crm.html">CRM</a>
-                            </li>
-                            <li>
-                                <a href="index.html">Ecommerce</a>
-                            </li>
-                            <li>
-                                <a href="dashboard-projects.html">Projects</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <% app.Role.forEach((role) => { %>
-
-
-                    <% if(role === 'ORDER'){ %>
-                        &lt;!&ndash; Order &ndash;&gt;
-                        <li class="side-nav-title side-nav-item">ORDER MANAGEMENT</li>
-                        <li class="side-nav-item">
-
-                            <a data-bs-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order"
-                               class="side-nav-link">
-
-                                <i class="uil-store"></i>
-                                <span> Order </span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <div class="collapse" id="order">
-                                <ul class="side-nav-second-level">
-                                    <li>
-                                        <a href="/admin/order/all">All</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/pending">Pending</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/confirmed">Confirmed</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/processing">Processing</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/out_of_delivery">Out For Delivery</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/deliverd">Delivered</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/returned">Returned</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/failed">Failed</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/order/canceled">Canceled</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    <% } %>
-
-
-                    <% if(role === 'CATEGORY'){ %>
-                        <li class="side-nav-title side-nav-item">PRODUCT MANAGEMENT</li>
-                        <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" href="#category" aria-expanded="false"
-                               aria-controls="category"
-                               class="side-nav-link">
-                                <i class="uil-store"></i>
-                                <span> Category </span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <div class="collapse" id="category">
-                                <ul class="side-nav-second-level">
-                                    <li>
-                                        <a href="/admin/categories">Category</a>
-                                    </li>
-                                    <li>
-                                        <a href="/admin/sub-categories">Sub Category</a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </li>
-                    <% } %>
-
-                    <% if(role === 'PRODUCTS'){ %>
-                        <li class="side-nav-item">
-
-                            <a data-bs-toggle="collapse" href="#product" aria-expanded="false"
-                               aria-controls="product"
-                               class="side-nav-link">
-                                <i class="uil-store"></i>
-                                <span> Products </span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <div class="collapse" id="product">
-                                <ul class="side-nav-second-level">
-
-                                    <li>
-                                        <a href="/admin/keyword">Create Keyword</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="/admin/product">Create Product</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="/admin/list/product">Product List</a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </li>
-                    <% } %>
-
-                <% }) %>
-            </ul>
--->
-
+            <!---new  Sidemenu -->
 
             <ul class="side-nav">
 
@@ -223,271 +88,439 @@
                     </div>
                 </li>
 
+                <% if(app.user.roles === 'ADMIN'){ %>
 
-                <li class="side-nav-title side-nav-item">ORDER MANAGEMENT</li>
+                    <li class="side-nav-title side-nav-item">ORDER MANAGEMENT</li>
 
-                <li class="side-nav-item">
+                    <li class="side-nav-item">
 
-                    <a data-bs-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order"
-                       class="side-nav-link">
+                        <a data-bs-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order"
+                           class="side-nav-link">
 
-                        <i class="uil-store"></i>
-                        <span> Order </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="order">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="/admin/order/all">All</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/pending">Pending</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/confirmed">Confirmed</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/processing">Processing</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/out_of_delivery">Out For Delivery</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/deliverd">Delivered</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/returned">Returned</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/failed">Failed</a>
-                            </li>
-                            <li>
-                                <a href="/admin/order/canceled">Canceled</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+                            <i class="uil-store"></i>
+                            <span> Order </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="order">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/admin/order/all">
+                                        <span> All </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/pending">
+                                        <span> Pending </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/confirmed">
+                                        <span> Confirmed </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/processing">
+                                        <span> Processing </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/out_of_delivery">
+                                        <span> Out For Delivery </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/deliverd">
+                                        <span>Delivered</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/returned">
+                                        <span>Returned</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/failed">
+                                        <span>Failed</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/order/canceled">
+                                        <span>Canceled</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-                <li class="side-nav-title side-nav-item">PRODUCT MANAGEMENT</li>
+                    <li class="side-nav-title side-nav-item">PRODUCT MANAGEMENT</li>
 
-                <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="category"
-                       class="side-nav-link">
-                        <i class="uil-store"></i>
-                        <span> Category </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="category">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="/admin/categories">Category</a>
-                            </li>
-                            <li>
-                                <a href="/admin/sub-categories">Sub Category</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a data-bs-toggle="collapse" href="#product" aria-expanded="false" aria-controls="product"
-                       class="side-nav-link">
-                        <i class="uil-store"></i>
-                        <span> Products </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="product">
-                        <ul class="side-nav-second-level">
-
-                            <li>
-                                <a href="/admin/keyword">Create Keyword</a>
-                            </li>
-
-                            <li>
-                                <a href="/admin/product">Create Product</a>
-                            </li>
-
-                            <li>
-                                <a href="/admin/list/product">Product List</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="side-nav-title side-nav-item">COUNTRY HANDLER</li>
-
-                <li class="side-nav-item">
-                    <a href="/admin/state/list" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> State List </span>
-                    </a>
-                </li>
-
-                <li class="side-nav-item">
-                    <a href="/admin/city/list" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> City List </span>
-                    </a>
-                </li>
-
-                <li class="side-nav-title side-nav-item">EMPLOYEE HANDLER</li>
-
-                <li class="side-nav-item">
-                    <a href="/admin/role-management" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Role Management </span>
-                    </a>
-                </li>
-
-                <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#employee" aria-expanded="false" aria-controls="employee"
-                       class="side-nav-link">
-                        <i class="uil-store"></i>
-                        <span> Employee </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="employee">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="/admin/employee/add">Add New</a>
-                            </li>
-                            <li>
-                                <a href="/admin/employee/list">List</a>
-                            </li>
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="category"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Category </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="category">
+                            <ul class="side-nav-second-level">
 
 
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="side-nav-title side-nav-item">SELLER SECTION</li>
-
-                <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#seller" aria-expanded="false" aria-controls="seller"
-                       class="side-nav-link">
-                        <i class="uil-store"></i>
-                        <span> Seller </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="seller">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="/admin/add/seller">Add Seller</a>
-                            </li>
-                            <li>
-                                <a href="/admin/seller/list">Seller List</a>
-                            </li>
-                            <li>
-                                <a href="/admin/withdraw/list">Withdraw List</a>
-                            </li>
+                                <li>
+                                    <a href="/admin/categories">Category</a>
+                                </li>
 
 
-                        </ul>
-                    </div>
-                </li>
+                                <li>
+                                    <a href="/admin/sub-categories">Sub Category</a>
+                                </li>
 
-                <li class="side-nav-title side-nav-item">DEAL MANAGEMENT</li>
 
-                <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#deal" aria-expanded="false" aria-controls="deal"
-                       class="side-nav-link">
-                        <i class="uil-store"></i>
-                        <span> All Deals </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="deal">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="/admin/flash-deal">Flash Deal</a>
-                            </li>
-                            <li>
-                                <a href="/admin/deal/day">Deal of The Day</a>
-                            </li>
-                            <li>
-                                <a href="/admin/feature/deal">Feature Deal</a>
-                            </li>
+                            </ul>
+                        </div>
+                    </li>
 
-                        </ul>
-                    </div>
-                </li>
+                    <li class="side-nav-item">
 
-                <li class="side-nav-title side-nav-item">BUSINESS MANAGEMENT</li>
+                        <a data-bs-toggle="collapse" href="#product" aria-expanded="false" aria-controls="product"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Products </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="product">
+                            <ul class="side-nav-second-level">
 
-                <li class="side-nav-item">
-                    <a href="/admin/customer/list" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Customer List </span>
-                    </a>
-                </li>
+                                <li>
+                                    <a href="/admin/keyword">Create Keyword</a>
+                                </li>
 
-                <li class="side-nav-item">
-                    <a href="/admin/version" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Version Control </span>
-                    </a>
-                </li>
+                                <li>
+                                    <a href="/admin/product">Create Product</a>
+                                </li>
 
-                <li class="side-nav-item">
-                    <a href="/admin/banner/list" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Product Reviews </span>
-                    </a>
-                </li>
+                                <li>
+                                    <a href="/admin/list/product">Product List</a>
+                                </li>
 
-                <li class="side-nav-item">
-                    <a href="/admin/banner/list" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Customar Message </span>
-                    </a>
-                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-                <li class="side-nav-item">
-                    <a href="/admin/banner/list" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Support ticket </span>
-                    </a>
-                </li>
+                    <li class="side-nav-title side-nav-item">COUNTRY HANDLER</li>
 
-                <li class="side-nav-item">
-                    <a href="/admin/send/notification" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Send Notification </span>
-                    </a>
-                </li>
+                    <li class="side-nav-item">
+                        <a href="/admin/state/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> State List </span>
+                        </a>
+                    </li>
 
-                <li class="side-nav-item">
-                    <a href="/admin/coupon/add-new" class="side-nav-link">
-                        <i class="uil-calender"></i>
-                        <span> Coupon </span>
-                    </a>
-                </li>
+                    <li class="side-nav-item">
+                        <a href="/admin/city/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> City List </span>
+                        </a>
+                    </li>
 
-                <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#business_settings" aria-expanded="false"
-                       aria-controls="deal"
-                       class="side-nav-link">
-                        <i class="uil-store"></i>
-                        <span> Business Settings </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="business_settings">
-                        <ul class="side-nav-second-level">
-                            <li>
-                                <a href="/admin/Business-settings/Shipping-method/add">Shipping Method</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+                    <li class="side-nav-title side-nav-item">EMPLOYEE HANDLER</li>
 
-                <li class="side-nav-title side-nav-item">REPORT & ANALYTICS</li>
+                    <li class="side-nav-item">
+                        <a href="/admin/role-management" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Role Management </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#employee" aria-expanded="false" aria-controls="employee"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Employee </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="employee">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/admin/employee/add">Add New</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/employee/list">List</a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-title side-nav-item">SELLER SECTION</li>
+
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#seller" aria-expanded="false" aria-controls="seller"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Seller </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="seller">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/admin/add/seller">Add Seller</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/seller/list">Seller List</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/withdraw/list">Withdraw List</a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-title side-nav-item">DEAL MANAGEMENT</li>
+
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#deal" aria-expanded="false" aria-controls="deal"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> All Deals </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="deal">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/admin/flash-deal">Flash Deal</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/deal/day">Deal of The Day</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/feature/deal">Feature Deal</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-title side-nav-item">BUSINESS MANAGEMENT</li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/customer/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Customer List </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/version" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Version Control </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/banner/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Product Reviews </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/banner/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Customar Message </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/banner/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Support ticket </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/send/notification" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Send Notification </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/admin/coupon/add-new" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Coupon </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#business_settings" aria-expanded="false"
+                           aria-controls="deal"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Business Settings </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="business_settings">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/admin/Business-settings/Shipping-method/add">Shipping Method</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-title side-nav-item">REPORT & ANALYTICS</li>
+
+                <% }else{ %>
+
+                    <!-- Order -->
+                    <li class="side-nav-title side-nav-item">ORDER MANAGEMENT</li>
+
+                    <li class="side-nav-item">
+
+                        <a data-bs-toggle="collapse" href="#order" aria-expanded="false" aria-controls="order"
+                           class="side-nav-link">
+
+                            <i class="uil-store"></i>
+                            <span> Order </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="order">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/seller/order/all">
+                                        <span> All </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/pending">
+                                        <span> Pending </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/confirmed">
+                                        <span> Confirmed </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/processing">
+                                        <span> Processing </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/out_of_delivery">
+                                        <span> Out For Delivery </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/deliverd">
+                                        <span>Delivered</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/returned">
+                                        <span>Returned</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/failed">
+                                        <span>Failed</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/seller/order/canceled">
+                                        <span>Canceled</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-title side-nav-item">PRODUCT MANAGEMENT</li>
+
+                    <li class="side-nav-item">
+
+                        <a data-bs-toggle="collapse" href="#product" aria-expanded="false" aria-controls="product"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Products </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="product">
+                            <ul class="side-nav-second-level">
+
+                                <li>
+                                    <a href="/seller/keyword">Create Keyword</a>
+                                </li>
+
+                                <li>
+                                    <a href="/seller/product">Create Product</a>
+                                </li>
+
+                                <li>
+                                    <a href="/seller/list/product">Product List</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-title side-nav-item">BUSINESS MANAGEMENT</li>
+
+
+                    <li class="side-nav-item">
+                        <a href="/seller/banner/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Product Reviews </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/seller/banner/list" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> Customar Message </span>
+                        </a>
+                    </li>
+
+                    <li class="side-nav-item">
+                        <a href="/seller/profile/view" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> My Bank Info</span>
+                        </a>
+                    </li>
+                    <li class="side-nav-item">
+                        <a href="/seller/shop/view" class="side-nav-link">
+                            <i class="uil-calender"></i>
+                            <span> My Shop</span>
+                        </a>
+                    </li>
+
+
+
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#business_settings" aria-expanded="false"
+                           aria-controls="deal"
+                           class="side-nav-link">
+                            <i class="uil-store"></i>
+                            <span> Business Settings </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="business_settings">
+                            <ul class="side-nav-second-level">
+                                <li>
+                                    <a href="/seller/Business-settings/Shipping-method/add">Shipping Method</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                <% } %>
 
             </ul>
 
 
-            <!-- Help Box -->
             <div class="help-box text-white text-center">
                 <a href="javascript: void(0);" class="float-end close-btn text-white">
                     <i class="mdi mdi-close"></i>
@@ -498,6 +531,7 @@
                 <a href="javascript: void(0);" class="btn btn-outline-light btn-sm">Upgrade</a>
             </div>
 
+
             <div class="clearfix"></div>
 
         </div>
@@ -507,6 +541,7 @@
 
     <div class="content-page">
         <div class="content">
+
             <div class="navbar-custom">
                 <ul class="list-unstyled topbar-menu float-end mb-0">
                     <li class="dropdown notification-list d-lg-none">
@@ -524,35 +559,34 @@
                     <li class="dropdown notification-list topbar-dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
                            aria-haspopup="false" aria-expanded="false">
-                            <img src="/images/flags/us.jpg" alt="user-image" class="me-0 me-sm-1"
-                                 height="12">
+                            <img src="/images/flags/us.jpg" alt="user-image" class="me-0 me-sm-1" height="12">
                             <span class="align-middle d-none d-sm-inline-block">English</span> <i
                                     class="mdi mdi-chevron-down d-none d-sm-inline-block align-middle"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu">
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <img src="/images/flags/germany.jpg" alt="user-image" class="me-1"
-                                     height="12"> <span class="align-middle">German</span>
+                                <img src="/images/flags/germany.jpg" alt="user-image" class="me-1" height="12">
+                                <span class="align-middle">German</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <img src="/images/flags/italy.jpg" alt="user-image" class="me-1"
-                                     height="12"> <span class="align-middle">Italian</span>
+                                <img src="/images/flags/italy.jpg" alt="user-image" class="me-1" height="12">
+                                <span class="align-middle">Italian</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <img src="/images/flags/spain.jpg" alt="user-image" class="me-1"
-                                     height="12"> <span class="align-middle">Spanish</span>
+                                <img src="/images/flags/spain.jpg" alt="user-image" class="me-1" height="12">
+                                <span class="align-middle">Spanish</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <img src="/images/flags/russia.jpg" alt="user-image" class="me-1"
-                                     height="12"> <span class="align-middle">Russian</span>
+                                <img src="/images/flags/russia.jpg" alt="user-image" class="me-1" height="12">
+                                <span class="align-middle">Russian</span>
                             </a>
 
                         </div>
@@ -566,7 +600,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg">
 
-                            <!-- item-->
+
                             <div class="dropdown-item noti-title">
                                 <h5 class="m-0">
                                             <span class="float-end">
@@ -578,7 +612,7 @@
                             </div>
 
                             <div style="max-height: 230px;" data-simplebar>
-                                <!-- item-->
+
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-primary">
                                         <i class="mdi mdi-comment-account-outline"></i>
@@ -588,7 +622,7 @@
                                     </p>
                                 </a>
 
-                                <!-- item-->
+
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-info">
                                         <i class="mdi mdi-account-plus"></i>
@@ -598,18 +632,18 @@
                                     </p>
                                 </a>
 
-                                <!-- item-->
+
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon">
-                                        <img src="/images/users/avatar-2.jpg"
-                                             class="img-fluid rounded-circle" alt=""/></div>
+                                        <img src="/images/users/avatar-2.jpg" class="img-fluid rounded-circle"
+                                             alt=""/></div>
                                     <p class="notify-details">Cristina Pride</p>
                                     <p class="text-muted mb-0 user-msg">
                                         <small>Hi, How are you? What about our next meeting</small>
                                     </p>
                                 </a>
 
-                                <!-- item-->
+
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-primary">
                                         <i class="mdi mdi-comment-account-outline"></i>
@@ -619,18 +653,18 @@
                                     </p>
                                 </a>
 
-                                <!-- item-->
+
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon">
-                                        <img src="/images/users/avatar-4.jpg"
-                                             class="img-fluid rounded-circle" alt=""/></div>
+                                        <img src="/images/users/avatar-4.jpg" class="img-fluid rounded-circle"
+                                             alt=""/></div>
                                     <p class="notify-details">Karen Robinson</p>
                                     <p class="text-muted mb-0 user-msg">
                                         <small>Wow ! this admin looks good and awesome design</small>
                                     </p>
                                 </a>
 
-                                <!-- item-->
+
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-info">
                                         <i class="mdi mdi-heart"></i>
@@ -642,7 +676,7 @@
                                 </a>
                             </div>
 
-                            <!-- All-->
+
                             <a href="javascript:void(0);"
                                class="dropdown-item text-center text-primary notify-item notify-all">
                                 View All
@@ -683,7 +717,7 @@
                                 <div class="row g-0">
                                     <div class="col">
                                         <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/bitbucket.png" alt="bitbucket">
+                                            <img src="/images/brands/bitbucket.png" alt="bitbucket">
                                             <span>Bitbucket</span>
                                         </a>
                                     </div>
@@ -699,7 +733,7 @@
                                             <span>G Suite</span>
                                         </a>
                                     </div>
-                                </div> <!-- end row-->
+                                </div>
                             </div>
 
                         </div>
@@ -725,37 +759,38 @@
                                     </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
-                            <!-- item-->
+
                             <div class=" dropdown-header noti-title">
                                 <h6 class="text-overflow m-0">Welcome !</h6>
                             </div>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="mdi mdi-account-circle me-1"></i>
                                 <span>My Account</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="mdi mdi-account-edit me-1"></i>
                                 <span>Settings</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="mdi mdi-lifebuoy me-1"></i>
                                 <span>Support</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="mdi mdi-lock-outline me-1"></i>
                                 <span>Lock Screen</span>
                             </a>
 
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+
+                            <a href="/<%= (app.user.roles === 'ADMIN') ? 'admin' : 'seller' %>/logout"
+                               class="dropdown-item notify-item">
                                 <i class="mdi mdi-logout me-1"></i>
                                 <span>Logout</span>
                             </a>
@@ -821,7 +856,7 @@
                             <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <div class="d-flex">
-                                    <img class="d-flex me-2 rounded-circle" src="/back/assets/images/users/avatar-5.jpg"
+                                    <img class="d-flex me-2 rounded-circle" src="/images/users/avatar-5.jpg"
                                          alt="Generic placeholder image" height="32">
                                     <div class="w-100">
                                         <h5 class="m-0 font-14">Jacob Deo</h5>
@@ -833,4 +868,6 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="container-fluid">

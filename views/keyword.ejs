@@ -1,4 +1,4 @@
-<%-include("./layout/header")%>
+<%- include('./layout/header', {dataTable:true}) %>
 
 <div class="row">
     <div class="col-12">
@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-lg-6">
 
-                                <form action="" method="POST" autocomplete="off" >
+                                <form action="" method="POST" autocomplete="off">
                                     <div class="mb-3">
                                         <label for="simpleinput" class="form-label">Keyword Name</label>
                                         <input type="text" id="keyword_name" name="keyword_name" class="form-control">
@@ -62,7 +62,7 @@
                                     <th>SL#</th>
                                     <th>Name</th>
                                     <th>SLUG</th>
-                                    <th>STATUS</th>
+
                                     <th>ACTION</th>
                                 </tr>
                                 </thead>
@@ -72,22 +72,8 @@
                                         <td><%= i; %></td>
                                         <td><%= row.name %></td>
                                         <td><%= row.slug %></td>
-                                        <td>
-                                            <div>
-
-                                                <input type="checkbox" id="<%= i %>" class="change-status"
-                                                       data-switch="success"
-                                                       value="<%= (row.status) ? 'off' : 'on' %>"
-                                                        <%= (row.status) ? 'checked' : '' %>
-                                                       onchange="ChangeStatus(this ,'<%= row._id %>' )">
-                                                <label for="<%= i %>" data-on-label="on"
-                                                       data-off-label="off"
-                                                       class="mb-0 d-block"></label>
-                                            </div>
-                                        </td>
-
                                         <td class="table-action">
-                                            <a href="/admin/category/edit/<%=row._id%>?pos=0" class="action-icon"> <i
+                                            <a href="/admin/category/edit/<%= row._id %>?pos=0" class="action-icon"> <i
                                                         class="mdi mdi-pencil"></i></a>
                                             <a href="javascript: void(0);" class="action-icon" data-bs-toggle="modal"
                                                data-bs-target="#standard-modal" onclick="showModal('<%= row._id %>')">
@@ -129,4 +115,5 @@
 
 </div>
 
-<%-include("./layout/footer")%>
+
+<%- include('./layout/footer', {dataTable:true}) %>

@@ -1,5 +1,4 @@
-<%- include("./layout/header") %>
-
+<%- include('./layout/header', {dataTable:false}) %>
 
 <div class="row">
     <div class="col-12">
@@ -24,7 +23,8 @@
                         <div class="row">
                             <div class="col-lg-6">
 
-                                <form action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+                                <form action="/seller/categories"
+                                      method="POST" autocomplete="off" enctype="multipart/form-data">
                                     <div class="mb-3">
                                         <label for="simpleinput" class="form-label">Name</label>
                                         <input type="text" id="name" name="name" class="form-control">
@@ -101,7 +101,7 @@
                                         </td>
 
                                         <td class="table-action">
-                                            <a href="/admin/category/edit/<%=row._id%>?pos=0" class="action-icon"> <i
+                                            <a href="/admin/category/edit/<%= row._id %>?pos=0" class="action-icon"> <i
                                                         class="mdi mdi-pencil"></i></a>
                                             <a href="javascript: void(0);" class="action-icon" data-bs-toggle="modal"
                                                data-bs-target="#standard-modal" onclick="showModal('<%= row._id %>')">
@@ -151,11 +151,11 @@
         $('.deleteCategory').click(() => {
             let id = $('.set_id').val();
             $.ajax({
-                url: '/admin/categories',
+                url: '<%= (app.user.roles === 'ADMIN') ? '/admin' : '/seller' %>/categories',
                 type: 'DELETE',
-                data : {id},
+                data: {id},
                 success: function (response) {
-                    window.location = "/admin/categories"
+                    window.location = '<%= (app.user.roles === 'ADMIN') ? '/admin' : '/seller' %>/categories'
                 }
             });
         })
@@ -165,12 +165,12 @@
     function ChangeStatus(thiss, id) {
         $(thiss).val(($(thiss).val() === 'on') ? 'off' : 'on');
         let val = $(thiss).val();
-        console.log("sxsa")
         $.ajax({
-            url: '/admin/categories/status',
+            url: '<%= (app.user.roles === 'ADMIN') ? '/admin' : '/seller' %>/categories/status',
             type: 'PATCH',
-            data : {id , val},
-            success: function (response) {}
+            data: {id, val},
+            success: function (response) {
+            }
         });
     }
 
@@ -180,4 +180,4 @@
 
 </script>
 
-<%- include("./layout/footer") %>
+<%- include('./layout/footer', {dataTable:false}) %>

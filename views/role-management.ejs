@@ -1,0 +1,321 @@
+<%- include('./layout/header', {dataTable:false}) %>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <!--                    <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>-->
+                    <!--                    <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>-->
+                    <!--                    <li class="breadcrumb-item active">Banner Add</li>-->
+                </ol>
+            </div>
+            <h4 class="page-title">Category</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="tab-content">
+
+                    <div class="tab-pane show active" id="input-types-preview">
+
+
+                        <form action="" method="POST" autocomplete="off">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Role Name</label>
+                                        <input type="text" id="role_name" name="role_name" class="form-control"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="PRODUCTS*#*<%= app.roleAss.PRODUCT %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Products</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="ORDER*#*<%= app.roleAss.ORDER %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Order</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="CATEGORY*#*<%= app.roleAss.CATEGORIES %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Category</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="BRAND*#*<%= app.roleAss.BRAND %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Brand</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="DEAL*#*<%= app.roleAss.DEAL %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Deal</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="SELLERS*#*<%= app.roleAss.SELLER %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Sellers</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="EMPLOYEE*#*<%= app.roleAss.EMPLOYEE %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Employee</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="COUPON*#*<%= app.roleAss.COUPAN %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Coupon</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="MESSAGE*#*<%= app.roleAss.CUSTOMER_MESSAGE %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Customer
+                                            Messages</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management"
+                                               value="CUSTOM_ROLE*#*<%= app.roleAss.ROLE_MANAGEMENT %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Custom Role</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management"
+                                               value="BUSINESS_SETTINGS*#*<%= app.roleAss.BUSINESS_SETTING %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Business
+                                            Settings</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management"
+                                               value="NOTIFICATION*#*<%= app.roleAss.SEND_NOTIFICATION %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Notification</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="BANNER*#*<%= app.roleAss.BANNER %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Banner</label>
+                                    </div>
+                                </div>
+                                <!--                                <div class="col-lg-3">-->
+                                <!--                                    <div class="form-check mb-2">-->
+                                <!--                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"-->
+                                <!--                                               name="management" value="ATTRIBUTE">-->
+                                <!--                                        <label class="form-check-label" for="customCheckcolor1">Attribute</label>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="CUSTOMER_LIST*#*<%= app.roleAss.CUSTOMER %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Customer List</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management"
+                                               value="PRODUCT_REVIEW*#*<%= app.roleAss.PRODUCT_REVIEW %>">
+                                        <label class="form-check-label" for="customCheckcolor1">Product Review</label>
+                                    </div>
+                                </div>
+
+                                <!--                                <div class="col-lg-3">-->
+                                <!--                                    <div class="form-check mb-2">-->
+                                <!--                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"-->
+                                <!--                                               name="management" value="REPORT">-->
+                                <!--                                        <label class="form-check-label" for="customCheckcolor1">Report</label>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="STATE*#*<%= app.roleAss.STATE %>">
+                                        <label class="form-check-label" for="customCheckcolor1">State</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" class="form-check-input" id="customCheckcolor1"
+                                               name="management" value="CITY*#*<%= app.roleAss.CITY %>">
+                                        <label class="form-check-label" for="customCheckcolor1">City</label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="mb-6">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="header-title">Role Management List</h4>
+
+                <div class="tab-content">
+                    <div class="tab-pane show active" id="basic-example-preview">
+                        <div class="table-responsive-sm">
+                            <table class="table table-centered mb-0">
+                                <thead>
+                                <tr>
+                                    <th>SL#</th>
+                                    <th>Role Name</th>
+                                    <th>MODULES</th>
+                                    <th>STATUS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% let i = 1; role_management.forEach(row => { %>
+                                    <tr>
+                                        <td><%= i; %></td>
+                                        <td><%= row.role_name %></td>
+                                        <td>
+                                            <% row.module_access.forEach((val) => { %>
+                                                <%= val.value %>
+                                                </br>
+                                            <% }) %>
+                                        </td>
+
+                                        <td>
+                                            <div>
+
+                                                <input type="checkbox" id="<%= i %>" class="change-status"
+                                                       data-switch="success" value="<%= (row.status) ? 'off' : 'on' %>"
+                                                        <%= (row.status) ? 'checked' : '' %>
+                                                       onchange="ChangeStatus(this ,'<%= row._id %>' )">
+                                                <label for="<%= i %>" data-on-label="on"
+                                                       data-off-label="off"
+                                                       class="mb-0 d-block"></label>
+                                            </div>
+                                        </td>
+
+                                        <td class="table-action">
+                                            <a href="/admin/edit/role-management/<%= row._id %>" class="action-icon"> <i
+                                                        class="mdi mdi-pencil"></i></a>
+                                            <a href="javascript: void(0);" class="action-icon" data-bs-toggle="modal"
+                                               data-bs-target="#standard-modal" onclick="showModal('<%= row._id %>')">
+                                                <i class="mdi mdi-delete"></i></a>
+                                        </td>
+                                    </tr>
+                                <% i++;}) %>
+                                </tbody>
+                            </table>
+                            <div class="show-modal">
+                                <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog"
+                                     aria-labelledby="standard-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body text-center">
+                                                <img src="/uploads/">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="text" name="id" class="set_id" hidden disabled>
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="button" class="btn btn-danger deleteCategory">Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+
+    $(document).ready(() => {
+
+        $('.deleteCategory').click(() => {
+            let id = $('.set_id').val();
+            $.post("/admin/category-delete", {id}, data => {
+                window.location = "/admin/brand/add-new";
+            })
+        })
+
+    })
+
+    function ChangeStatus(thiss, id) {
+        $(thiss).val(($(thiss).val() === 'on') ? 'off' : 'on');
+        let val = $(thiss).val();
+        $.post('/admin/role-management-status', {val, id}, data => {
+
+        })
+    }
+
+
+    function showModal(_id) {
+        $(".set_id").val(_id);
+    }
+
+
+</script>
+
+
+<%- include('./layout/footer', {dataTable:false}) %>

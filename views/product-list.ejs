@@ -1,26 +1,20 @@
-<%- include("./layout/header") %>
-
-<link href="/css/vendor/dataTables.bootstrap5.css" rel="stylesheet" type="text/css">
-<link href="/css/vendor/responsive.bootstrap5.css" rel="stylesheet" type="text/css">
+<%- include('./layout/header', {dataTable:true}) %>
 
 <div class="row">
     <div class="col-12">
         <div class="page-title-box">
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a href="javascript: void(0);"></a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript: void(0);"></a>
-                    </li>
-                    <li class="breadcrumb-item active"></li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
+                    <li class="breadcrumb-item active">Products</li>
                 </ol>
             </div>
             <h4 class="page-title">Products</h4>
         </div>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-12">
@@ -29,174 +23,96 @@
 
 
                 <div class="table-responsive">
-                    <div id="products-datatable_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-centered w-100 dt-responsive nowrap dataTable no-footer dtr-inline collapsed"
-                                       id="products-datatable" role="grid" aria-describedby="products-datatable_info"
-                                       style="width: 996px;">
-                                    <thead class="table-light">
-                                    <tr role="row">
-                                        <th class="all  dt-checkboxes-cell dt-checkboxes-select-all"
-                                            style="width: 42.6px;" rowspan="1" colspan="1" data-col="0"
-                                            aria-label="&amp;nbsp;">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input dt-checkboxes"><label
-                                                        class="form-check-label">&nbsp;</label>
-                                            </div>
-                                        </th>
-                                        <th class="all " tabindex="0" aria-controls="products-datatable"
-                                            rowspan="1" colspan="1" style="width: 272.8px;"
-                                            aria-label="Product: activate to sort column ascending">Product
-                                        </th>
-                                        <th class=" " tabindex="0" aria-controls="products-datatable"
-                                            rowspan="1" colspan="1" style="width: 106.8px;"
-                                            aria-label="Category: activate to sort column ascending"
-                                            aria-sort="descending">Category
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 95.8px;"
-                                            aria-label="Added Date: activate to sort column ascending">Added Date
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 50.8px;"
-                                            aria-label="Price: activate to sort column ascending">Unit Price
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 70.8px;"
-                                            aria-label="Quantity: activate to sort column ascending">Quantity
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 53.8px;"
-                                            aria-label="Status: activate to sort column ascending">Flash Deal
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 53.8px;"
-                                            aria-label="Status: activate to sort column ascending">Status
-                                        </th>
-                                        <th style="width: 0px; display: none;" class="sorting_disabled" rowspan="1"
-                                            colspan="1" aria-label="Action">Action
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <% let i = 1; product.forEach(row => { %>
-                                        <tr class="odd">
-                                            <td class="dt-checkboxes-cell " tabindex="0">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input dt-checkboxes">
-                                                    <label class="form-check-label">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td class="">
-                                                <img src="/uploads/<%= row.thumbnail %>" alt="contact-img"
-                                                     title="contact-img" class="rounded me-3" height="48">
-                                                <p class="m-0 d-inline-block align-middle font-16">
-                                                    <a href="/admin/product/details/<%=row._id%>"
-                                                       class="text-body"> <%= row.name %></a>
-                                                    <br>
-                                                    <span class="text-warning mdi mdi-star"></span>
-                                                    <span class="text-warning mdi mdi-star"></span>
-                                                    <span class="text-warning mdi mdi-star"></span>
-                                                    <span class="text-warning mdi mdi-star"></span>
-                                                    <span class="text-warning mdi mdi-star"></span>
-                                                </p>
-                                            </td>
-                                            <td class="sorting_1" style="">
-                                                <%= row.category_name.name %>
-                                            </td>
-                                            <td class="" style="">
-                                                <% let date = moment(row.created_at).format("DD/MM/YYYY") %>
-                                                <%= date %>
-                                            </td>
-                                            <td style="">
-                                                ₹<%= row.unit_price %>
-                                            </td>
-
-                                            <td style="">
-                                                <%= row.current_stock %>
-                                            </td>
-                                            <td style="">
-                                                <div>
-
-                                                    <input type="checkbox" id="<%= i %>" class="change-status"
-                                                           data-switch="success"
-                                                           value="<%= (row.status) ? 'off' : 'on' %>"
-                                                            <%= (row.status) ? 'checked' : '' %>
-                                                           onchange="ChangeStatus(this ,'<%= row._id %>' )">
-                                                    <label for="<%= i %>" data-on-label="on"
-                                                           data-off-label="off"
-                                                           class="mb-0 d-block"></label>
-                                                </div>
-                                            </td>
-                                            <td style="">
-                                                <% if(row.status){ %>
-                                                    <span class="badge bg-success">Active</span>
-                                                <% }else{ %>
-                                                    <span class="badge bg-danger">Deactive</span>
-                                                <% } %>
-
-                                            </td>
-                                            <td class="table-action" style="display: none;">
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                            class="mdi mdi-eye"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                            class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                            class="mdi mdi-delete"></i></a>
-                                            </td>
-                                        </tr>
-                                    <% i++; }) %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-5">
-                                <div class="dataTables_info" id="products-datatable_info" role="status"
-                                     aria-live="polite">Showing products 1 to 12 of 12
+                    <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="all" style="width: 20px;">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="customCheck1">
+                                    <label class="form-check-label" for="customCheck1">&nbsp;</label>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 col-md-7">
-                                <div class="dataTables_paginate paging_simple_numbers" id="products-datatable_paginate">
-                                    <ul class="pagination pagination-rounded">
-                                        <li class="paginate_button page-item previous disabled"
-                                            id="products-datatable_previous">
-                                            <a href="#"
-                                               aria-controls="products-datatable"
-                                               data-dt-idx="0" tabindex="0"
-                                               class="page-link">
-                                                <i class="mdi mdi-chevron-left">
+                            </th>
+                            <th class="all">Product</th>
+                            <th>Category</th>
+                            <th>Added Date</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Flash Deal</th>
+                            <th>Status</th>
 
-                                                </i>
-                                            </a>
-                                        </li>
-                                        <li class="paginate_button page-item active">
-                                            <a href="#"
-                                                                                        aria-controls="products-datatable"
-                                                                                        data-dt-idx="1" tabindex="0"
-                                                                                        class="page-link">1</a></li>
-                                        <li class="paginate_button page-item next disabled"
-                                            id="products-datatable_next"><a href="#" aria-controls="products-datatable"
-                                                                            data-dt-idx="2" tabindex="0"
-                                                                            class="page-link"><i
-                                                        class="mdi mdi-chevron-right"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% let i = 1;  product.forEach(row => { %>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="customCheck2">
+                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <img src="/uploads/<%= row.thumbnail %>" alt="contact-img"
+                                         title="contact-img"
+                                         class="rounded me-3" height="48"/>
+                                    <p class="m-0 d-inline-block align-middle font-16">
+                                        <a href="/<%= (app.user.roles === 'ADMIN') ? 'admin' : 'seller' %>/product/details/<%= row._id %>"
+                                           class="text-body">
+                                            <%= row.name %>
+                                        </a>
+                                        <br/>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                        <span class="text-warning mdi mdi-star"></span>
+                                    </p>
+                                </td>
+                                <td>
+                                    <%= row.category_name.name %>
+                                </td>
+                                <td>
+                                    <% let date = moment(row.created_at).format("DD/MM/YYYY") %>
+                                    <%= date %>
+                                </td>
+                                <td>
+                                    ₹<%= row.unit_price %>
+                                </td>
+
+                                <td>
+                                    <%= row.current_stock %>
+                                </td>
+                                <td>
+                                    <div>
+
+                                        <input type="checkbox" id="<%= i %>" class="change-status"
+                                               data-switch="success"
+                                               value="<%= (row.status) ? 'off' : 'on' %>"
+                                                <%= (row.status) ? 'checked' : '' %>
+                                               onchange="ChangeStatus(this ,'<%= row._id %>' )">
+                                        <label for="<%= i %>" data-on-label="on"
+                                               data-off-label="off"
+                                               class="mb-0 d-block"></label>
+                                    </div>
+                                </td>
+
+                                <td style="">
+                                    <% if(row.status){ %>
+                                        <span class="badge bg-success">Active</span>
+                                    <% }else{ %>
+                                        <span class="badge bg-danger">Deactive</span>
+                                    <% } %>
+
+                                </td>
+
+                            </tr>
+                        <% i++; }) %>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        </div>
-    </div>
+            </div> <!-- end card-body-->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
 </div>
 
-<script src="/js/vendor/jquery.dataTables.min.js"></script>
-<script src="/js/vendor/dataTables.bootstrap5.js"></script>
-<script src="/js/vendor/dataTables.responsive.min.js"></script>
-<script src="/js/vendor/responsive.bootstrap5.min.js"></script>
-<script src="/js/vendor/dataTables.checkboxes.min.js"></script>
-
-<%- include("./layout/footer") %>
+<%- include('./layout/footer', {dataTable:true}) %>

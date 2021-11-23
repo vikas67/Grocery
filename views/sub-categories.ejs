@@ -1,5 +1,4 @@
-<%- include("./layout/header") %>
-
+<%- include('./layout/header', {dataTable:false}) %>
 
 <div class="row">
     <div class="col-12">
@@ -32,7 +31,7 @@
 
                                             <option value="null" selected="" disabled="">Select Parent Category</option>
                                             <% categories.forEach(row =>{ %>
-                                                <option value="<%=row._id%>"><%=row.name%></option>
+                                            <option value="<%= row._id %>"><%= row.name %></option>
                                             <% }) %>
                                         </select>
                                     </div>
@@ -83,7 +82,7 @@
                                 <% let i = 1; SubCategories.forEach(row => { %>
                                     <tr>
                                         <td><%= i; %></td>
-                                        <td><%=row.categories.name%></td>
+                                        <td><%= row.categories.name %></td>
                                         <td><%= row.name %></td>
                                         <td><%= row.slug %></td>
                                         <td>
@@ -181,4 +180,4 @@
 
 </script>
 
-<%- include("./layout/footer") %>
+<%- include('./layout/footer', {dataTable:false}) %>

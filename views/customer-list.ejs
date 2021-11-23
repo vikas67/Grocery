@@ -1,7 +1,4 @@
-<%- include("./layout/header") %>
-
-<link href="/css/vendor/dataTables.bootstrap5.css" rel="stylesheet" type="text/css">
-<link href="/css/vendor/responsive.bootstrap5.css" rel="stylesheet" type="text/css">
+<%- include('./layout/header', {dataTable:true}) %>
 
 
 <div class="row">
@@ -9,15 +6,16 @@
         <div class="page-title-box">
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                    <li class="breadcrumb-item active">Products</li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);"></a></li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);"></a></li>
+                    <li class="breadcrumb-item active">Customers</li>
                 </ol>
             </div>
-            <h4 class="page-title">Products</h4>
+            <h4 class="page-title">Customers</h4>
         </div>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-12">
@@ -25,13 +23,12 @@
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col-sm-4">
-                        <!--                        <a href="javascript:void(0);" class="btn btn-danger mb-2"><i-->
-                        <!--                                    class="mdi mdi-plus-circle me-2"></i> Add Products</a>-->
+                        <a href="javascript:void(0);" class="btn btn-danger mb-2"><i
+                                    class="mdi mdi-plus-circle me-2"></i> Add Customers</a>
                     </div>
                     <div class="col-sm-8">
                         <div class="text-sm-end">
-                            <button type="button" class="btn btn-success mb-2 me-1"><i class="mdi mdi-cog-outline"></i>
-                            </button>
+                            <button type="button" class="btn btn-success mb-2 me-1"><i class="mdi mdi-cog"></i></button>
                             <button type="button" class="btn btn-light mb-2 me-1">Import</button>
                             <button type="button" class="btn btn-light mb-2">Export</button>
                         </div>
@@ -39,132 +36,85 @@
                 </div>
 
                 <div class="table-responsive">
-                    <div id="products-datatable_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6">
-                                <div class="dataTables_length" id="products-datatable_length"><label class="form-label">Display
-                                        <select class="form-select form-select-sm ms-1 me-1">
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="-1">All</option>
-                                        </select> products</label></div>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div id="products-datatable_filter" class="dataTables_filter"><label>Search:<input
-                                                type="search" class="form-control form-control-sm" placeholder=""
-                                                aria-controls="products-datatable"></label></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
+                    <table class="table table-centered table-striped dt-responsive nowrap w-100"
+                           id="products-datatable">
+                        <thead>
+                        <tr>
+                            <th style="width: 20px;">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="customCheck1">
+                                    <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                                </div>
+                            </th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th></th>
+                            <th>Create Date</th>
+                            <th>Status</th>
+                            <th style="width: 75px;">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                                <table class="table table-centered table-striped dt-responsive nowrap w-100 dataTable no-footer dtr-inline collapsed"
-                                       id="products-datatable" role="grid" aria-describedby="products-datatable_info"
-                                       style="width: 997px;">
-                                    <thead>
-                                    <tr role="row">
+                        <% let i = 1;  CustomerList.forEach(row => { %>
 
-                                        <th class="sorting" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 152.8px;"
-                                            aria-label="Customer: activate to sort column ascending">Customer
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 107.8px;"
-                                            aria-label="Phone: activate to sort column ascending">Phone
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 160.8px;"
-                                            aria-label="Email: activate to sort column ascending">Email
-                                        </th>
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="products-datatable"
-                                            rowspan="1" colspan="1" style="width: 84.8px;" aria-sort="ascending"
-                                            aria-label="Create Date: activate to sort column descending">Create Date
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 47.8px;"
-                                            aria-label="Status: activate to sort column ascending">
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="products-datatable" rowspan="1"
-                                            colspan="1" style="width: 47.8px;"
-                                            aria-label="Status: activate to sort column ascending">Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
 
-                                    <% let i =1;  CustomerList.forEach(row => { %>
-                                    <tr class="even">
-                                        <td class="table-user">
-                                            <img src="/upload/<%= row.avatar %>" alt=""
-                                                 class="me-2 rounded-circle">
-                                            <a href="javascript:void(0);"
-                                               class="text-body fw-semibold"><%= row.name %></a>
-                                        </td>
-                                        <td>
-                                            <%= row.number %>
-                                        </td>
-                                        <td>
-                                            <%= row.email %>
-                                        </td>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="customCheck2">
+                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                    </div>
+                                </td>
+                                <td class="table-user">
+                                    <img src="/uploads/<%= row.thumbnail %>" alt="user"
+                                         class="me-2 rounded-circle">
+                                    <a href="javascript:void(0);" class="text-body fw-semibold"><%= row.name %></a>
+                                </td>
+                                <td>
+                                    <%= row.number %>
+                                </td>
+                                <td>
+                                    <%= row.email %>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <% let date = moment(row.created_at).format("DD/MM/YYYY") %>
+                                    <%= date %>
+                                </td>
+                                <td>
+                                    <div>
 
-                                        <td class="sorting_1">
-                                            <% date = moment(row.created_at).format("DD/MM/YYYY") %>
-                                            <%=date%>
-                                        </td>
+                                        <input type="checkbox" id="<%= i %>" class="change-status"
+                                               data-switch="success"
+                                               value="<%= (row.status) ? 'off' : 'on' %>"
+                                                <%= (row.status) ? 'checked' : '' %>
+                                               onchange="ChangeStatus(this ,'<%= row._id %>' )">
+                                        <label for="<%= i %>" data-on-label="on"
+                                               data-off-label="off"
+                                               class="mb-0 d-block"></label>
+                                    </div>
+                                </td>
 
-                                        <td class="sorting_1">
-                                            <div>
-                                                <input type="checkbox" id="<%= i %>" class="change-status"
-                                                       data-switch="success"
-                                                       value="<%= (row.status) ? 'off' : 'on' %>"
-                                                        <%= (row.status) ? 'checked' : '' %>
-                                                       onchange="ChangeStatus(this ,'<%= row._id %>' )">
-                                                <label for="<%= i %>" data-on-label="on"
-                                                       data-off-label="off"
-                                                       class="mb-0 d-block"></label>
-                                            </div>
-                                        </td>
+                                <td>
+                                    <% if(row.status){ %>
+                                        <span class="badge badge-success-lighten">Active</span>
+                                    <% }else{ %>
+                                        <span class="badge badge-danger-lighten">Blocked</span>
+                                    <% } %>
+                                </td>
+                            </tr>
 
-                                        <td>
-                                            <% if(row.status){ %>
-                                                <span class="badge badge-success-lighten">Active</span>
-                                            <% }else{ %>
-                                                <span class="badge badge-danger-lighten">Blocked</span>
-                                            <% } %>
-                                        </td>
+                        <% i++; }) %>
 
-                                    </tr>
-                                    <% i++ }) %>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
-            </div> <!-- end card-body-->
-        </div> <!-- end card-->
-    </div> <!-- end col -->
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<script src="/js/vendor/jquery.dataTables.min.js"></script>
-<script src="/js/vendor/dataTables.bootstrap5.js"></script>
-<script src="/js/vendor/dataTables.responsive.min.js"></script>
-<script src="/js/vendor/responsive.bootstrap5.min.js"></script>
-<script src="/js/vendor/dataTables.checkboxes.min.js"></script>
-
-<script>
-    function ChangeStatus(thiss, id) {
-        $(thiss).val(($(thiss).val() === 'on') ? 'off' : 'on');
-        let val = $(thiss).val();
-        $.ajax({
-            url: '/admin/customer/status',
-            type: 'PATCH',
-            data: {id, val},
-            success: function (response) {}
-        });
-    }
-</script>
-
-<%- include("./layout/footer") %>
+<%- include('./layout/footer', {dataTable:true}) %>

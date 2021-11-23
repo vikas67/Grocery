@@ -4,15 +4,22 @@ const createHttpError = require('http-errors');
 
 
 const AdminSchema = new Schema({
-    name : {type: String, require: true},
-    role : {type: Schema.Types.ObjectId , ref : "role management", require: true},
-    number : {type: Number, default: 0},
-    email : {type: String, require: true, lowercase: true},
-    password : {type: String, require: true},
-    avatar : {type: String, require: true , default : null},
-    status: {type: Boolean, default: true},
-    created_at: {type: Date, default: new Date()},
-});
+        name: {type: String, require: true},
+        role: {type: Schema.Types.ObjectId, ref: "role management", require: true},
+        number: {type: Number, default: 0},
+        email: {type: String, require: true, lowercase: true, unique: true},
+        password: {type: String, require: true},
+        avatar: {type: String, require: true, default: null},
+        roles: {
+            type: String,
+            enum: ["ADMIN", "SELLER", "EMPLOYEE"],
+            def: 'Admin or seller login and employee'
+        },
+        status: {type: Boolean, default: true}
+    },
+    {
+        timestamps: true
+    })
 
 
 AdminSchema.pre('save', async function (next) {
@@ -36,7 +43,6 @@ AdminSchema.methods.isValidPassword = async function (password) {
         throw createHttpError.InternalServerError(error.message);
     }
 };
-
 
 
 module.exports = model('admin', AdminSchema);

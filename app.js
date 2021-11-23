@@ -11,15 +11,21 @@ require('dotenv').config();
 const connectMongo = require('connect-mongo');
 const mongoose = require('mongoose');
 const compression = require('compression');
-
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 
 const adminRouter = require('./routes/admin.routes');
 const apiRouter = require('./routes/api.routes');
 const authRouter = require('./routes/auth.routes');
+const authRouterSeller = require('./routes/sellerAuth.routes');
+const sellerRouter = require('./routes/seller.routes');
 
 const app = express();
 
+
+// adding Helmet to enhance your API's security
+app.use(helmet());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -43,7 +49,7 @@ app.use(
             // secure: true,
             httpOnly: true,
         },
-        store: new MongoStore({ mongooseConnection: mongoose.connection }),
+        store: new MongoStore({mongooseConnection: mongoose.connection}),
     })
 );
 
@@ -62,40 +68,50 @@ app.use((req, res, next) => {
 });
 
 /*  Routers */
-app.use('/admin' , ensureAuthenticated , adminRouter);
+app.use('/admin/auth', authRouter);
+app.use('/seller/auth', authRouterSeller);
+app.use('/admin', ensureAuthenticated, adminRouter);
+app.use('/seller', sellerEnsureAuthenticated, sellerRouter);
 app.use('/app/api/v1', apiRouter);
-app.use('/auth/admin', authRouter);
 
 /* Authenticated Check */
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         next();
     } else {
-        res.redirect('/auth/admin/login');
+        res.redirect('/admin/auth/login');
+    }
+}
+
+function sellerEnsureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect('/seller/auth/login');
     }
 }
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  // res.render('error');
-  res.send({
-    error: {
-      status: err.status || 500,
-      message: err.message,
-      error : true
-    },
-  })
+    // render the error page
+    res.status(err.status || 500);
+    // res.render('error');
+    res.send({
+        error: {
+            status: err.status || 500,
+            message: err.message,
+            error: true
+        },
+    })
 
 });
 
